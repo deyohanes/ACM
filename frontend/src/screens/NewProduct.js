@@ -1,7 +1,14 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Form, Button, Col ,Row   } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Col,
+  Row,
+  ListGroup,
+  ListGroupItem,
+} from "react-bootstrap";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import { updateProduct } from "../actions/productActions";
@@ -20,8 +27,10 @@ const NewProduct = ({ match, history }) => {
   const [warehouseName, setwarehouseName] = useState([]);
   const [producer, setProducer] = useState("");
   const [symbol, setSymbol] = useState("");
-
-  
+  const [level, setLevel] = useState("");
+  const [market, setMarket] = useState("");
+  const [producerid, setProducerid] = useState("");
+  const [levels] = [1, 2, 3, 4, 5];
 
   async function getCommudity() {
     try {
@@ -29,7 +38,17 @@ const NewProduct = ({ match, history }) => {
       const name = response.data;
       console.log(name);
       setCommudityName(name);
-      
+      setSymbol(name.symbol)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getid(email) {
+    try {
+      const response = await axios.get("/api/users/ider", email);
+      const name = response.data._id;
+      setProducerid(name);
     } catch (error) {
       console.error(error);
     }
@@ -73,20 +92,35 @@ const NewProduct = ({ match, history }) => {
       setUploading(false);
     }
   };
-
+  async function addproduct() {
+    try {
+        await axios({
+            method: 'post',
+            url: '/api/product/new',
+            data: {
+              producer:  producer,
+              commudity: commudity,
+              symbol: "symbol",
+              warehouse : "warehouse",
+              image: image,
+              orgin: brand,
+              countInStock:countInStock ,
+              level: level,
+              description: "description",
+              market: market,
+              category: category
+               
+            }
+          });
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const submitHandler = (e) => {
     e.preventDefault();
-
-    updateProduct({
-      _id: productId,
-      commudity,
-      warehouse,
-      image,
-      brand,
-      category,
-      description,
-      countInStock,
-    });
+    //const id = getid(email)
+setDescription(description)
+addproduct()
   };
 
   return (
@@ -97,66 +131,56 @@ const NewProduct = ({ match, history }) => {
       <FormContainer>
         <h1>Add Product</h1>
 
- 
-
         <Form onSubmit={submitHandler}>
-  
-    <Row className="mb-3">
-    <Form.Group as={Col} controlId="formGridCity">
-      <Form.Label>Commudity Name</Form.Label>
-      <select
-              className="formitemss"
-              type="text"
-              value={commudity}
-              onChange={(e) => setCommudity(e.target.value)}
-            >
-              {commudityName.map((data) => (
-                <option key={data._id} value={commudityName.value}>
-                  {data.commoditieName}
-                </option>
-              ))}
-            </select>
-    </Form.Group>
-    <Form.Group as={Col} controlId="formGridState">
-      <Form.Label>Commudity Symbol</Form.Label>
-      <select
-              className="formitemss"
-              type="text"
-              value={commudity}
-              onChange={(e) => setCommudity(e.target.value)}
-            >
-              {commudityName.map((data) => (
-                <option key={data._id} value={commudityName.value}>
-                  {data.Symbol}
-                </option>
-              ))}
-            </select>
-    </Form.Group>
-   
- 
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="formGridCity">
+              <Form.Label>Commudity Name</Form.Label>
+              <Form.Control
+                as="select"
+                value={commudity}
+                onChange={(e) => setCommudity(e.target.value)}
+              >
+                {commudityName.map((data) => (
+                  <option key={data._id} value={commudityName.value}>
+                    {data.commoditieName}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
-          <Form.Group as={Col} controlId="name">
-            <label className="formitems" htmlFor="">
-              Warehouse
-            </label>
-            <select
-              className="formitemss"
-              type="text"
-              placeholder="warehouse"
-              value={warehouse}
-              onChange={(e) => setWarehouse(e.target.value)}
-            >
-              {warehouseName.map((data) => (
-                <option key={data._id} value={warehouseName.value}>
-                  {data.warehouseSymbol}
-                </option>
-              ))}
-            </select>
-          </Form.Group>
-          
-</Row>
+            <Form.Group as={Col} controlId="formGridCity">
+              <Form.Label>Commudity Symbol</Form.Label>
+              <Form.Control
+                as="select"
+                value={symbol}
+                onChange={(e) => setSymbol(e.target.value)}
+              >
+                {commudityName.map((data) => (
+                  <option key={data._id} value={commudityName.value}>
+                    {data.symbol}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
-           <Form.Group controlId="brand">
+            <Form.Group as={Col} controlId="formGridCity">
+              <Form.Label>WareHouse Symbol</Form.Label>
+              <Form.Control
+                as="select"
+                placeholder="warehouse"
+                value={warehouse}
+                onChange={(e) => setWarehouse(e.target.value)}
+              >
+                {warehouseName.map((data) => (
+                  <option key={data._id} value={warehouseName.value}>
+                    {data.warehouseSymbol}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Row>
+
+          <Form.Group controlId="brand">
             <Form.Label>Producer</Form.Label>
             <Form.Control
               type="text"
@@ -165,7 +189,7 @@ const NewProduct = ({ match, history }) => {
               onChange={(e) => setProducer(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          
+
           <Form.Group controlId="image">
             <Form.Label>Image</Form.Label>
             <Form.Control
@@ -192,7 +216,6 @@ const NewProduct = ({ match, history }) => {
               onChange={(e) => setBrand(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          
 
           <Form.Group controlId="countInStock">
             <Form.Label>Amount In Stock</Form.Label>
@@ -205,6 +228,27 @@ const NewProduct = ({ match, history }) => {
           </Form.Group>
 
           <Form.Group controlId="category">
+            <ListGroup.Item>
+              <Row>
+                <Col>Level</Col>
+                <Col>
+                  <Form.Control
+                    as="select"
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                  >
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </Form.Control>
+                </Col>
+              </Row>
+            </ListGroup.Item>
+          </Form.Group>
+
+          <Form.Group controlId="category">
             <Form.Label>Category</Form.Label>
             <Form.Control
               type="text"
@@ -214,16 +258,26 @@ const NewProduct = ({ match, history }) => {
             ></Form.Control>
           </Form.Group>
 
+          <Form.Group controlId="category">
+            <Form.Label>Market</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter category"
+              value={market}
+              onChange={(e) => setMarket(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
           <Form.Group controlId="description">
             <Form.Label>Description</Form.Label>
             <Form.Control
               type="text"
+              disabled
               placeholder="Enter description"
-              value={description}
+              value={"Level "+brand + "  " + level + " " + category + "  " + market}
               onChange={(e) => setDescription(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          
 
           <Button type="submit" variant="primary">
             ADD

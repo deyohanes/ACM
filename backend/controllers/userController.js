@@ -24,6 +24,22 @@ const authUser = asyncHandler(async (req, res) => {
   }
 })
 
+////////////////////////
+const getId = asyncHandler(async (req, res) => {
+  const { email } = req.body
+
+  const user = await User.findOne({ email })
+
+  if (user) {
+    res.json({
+      _id: user._id,
+    })
+  } else {
+    res.status(401)
+    throw new Error('Invalid email')
+  }
+})
+///////////////////////////
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
@@ -172,6 +188,7 @@ export {
   getUserProfile,
   updateUserProfile,
   getUsers,
+  getId,
   deleteUser,
   getUserById,
   updateUser,

@@ -16,6 +16,10 @@ const producerSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    region:{
+      type: String,
+      required: true,
+    }
      
   },
   {
@@ -36,6 +40,6 @@ producerSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt)
 })
 
-const User = mongoose.model('User', userSchema)
+const producer = mongoose.model('Producers', producerSchema)
 
-export default User
+export default producer

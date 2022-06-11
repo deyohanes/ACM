@@ -7,15 +7,15 @@
   symbol:{
     type :[String],
     required: true,
-  } ,
-  grade: {
+  },
+  orgin:{
     type :[String],
-    required : true
+    required: true,
   },
   market: {
     type: [String],
     required : true,
-    defaut: ["Local", "Export"],
+    defaut: ["Local", "Export","Both"],
   }
 },{
   timeStamp : true,

@@ -20,6 +20,10 @@ import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import Producer from './screens/Producer';
 import NewProduct from './screens/NewProduct';
+import Commodity from './screens/Commodity';
+import Warehouse from './screens/Warehouse'
+import Warehouselist from './screens/Warehouselist'
+import Commoditylist from './screens/Commoditylist'
 
 const App = () => {
   return (
@@ -45,6 +49,11 @@ const App = () => {
             exact
           />
            <Route path='/admin/newpro' component={NewProduct} />
+           <Route path='/admin/commodity' component={Commodity} />
+           <Route path='/admin/warehouse' component={Warehouse} />
+           <Route path='/admin/warehousetlist' component={Warehouselist} />
+           <Route path='/admin/commoditylist' component={Commoditylist} />
+
           <Route
             path='/admin/productlist/:pageNumber'
             component={ProductListScreen}

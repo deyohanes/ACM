@@ -2,20 +2,22 @@ import mongoose from "mongoose";
 
 const warehouseSchema = new mongoose.Schema({
   warehouseSymbol: {
-    type: [String],
+    type: String,
     required: true,
   },
-  block: {
-    type: [String],
-    required: true,
-  },
-  rack: {
-    type: [String],
+  region: {
+    type: String,
     required: true,
   },
   size: {
     type: Number,
     required: true,
+  },
+  isFull: {
+    type: Boolean,
+    required: true,
+    default : false,
+    
   },
 });
 const warehouse = new mongoose.model("warehouses", warehouseSchema);

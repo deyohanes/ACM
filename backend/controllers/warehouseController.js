@@ -29,8 +29,7 @@ const getWarehouseById = asyncHAndler(async (req, res) => {
 const setWarehouse = asyncHAndler(async (req, res) => {
   const warehouse = new Warehouse({
     warehouseSymbol: req.body.warehouseSymbol,
-    block: req.body.block,
-    rack: req.body.rack,
+    region: req.body.region,
     size: req.body.size,
   });
   try {

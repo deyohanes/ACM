@@ -30,7 +30,7 @@ const setCommodity = asyncHAndler(async (req, res) => {
   const commodity = new Commodity({
     commoditieName: req.body.commoditieName,
     symbol: req.body.symbol,
-    grade: req.body.grade,
+    orgin: req.body.orgin,
     market: req.body.market,
   });
   try {
