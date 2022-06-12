@@ -50,7 +50,9 @@ const bidSchema = mongoose.Schema({
     default: false,
   },
   numberOfbids : {
-    type : [Number],
+    type : Number,
+    required : true,
+    default :0
   },
   bider : [biderModel],
   openAt :{

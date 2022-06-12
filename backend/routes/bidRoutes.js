@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router()
 import {
-    newAuction,getOwnAuction,getAuction,placebid,verifybid,getAuctionById
+    updatebid,newAuction,getOwnAuction,getAuction,placebid,verifybid,getAuctionById
    
 } from '../controllers/bidController.js'
 
@@ -12,6 +12,8 @@ router.get('/byid',getAuctionById)
 
 router.get('/all',getAuction)
 router.put('/verify',verifybid)
+router.put('/updatebid',updatebid)
+
 
 
 

@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { bid, bider } from "../models/bidModel.js";
+import { bid,  bider } from "../models/bidModel.js";
 
 // @desc    Create new bid
 // @route   POST /api/bid
@@ -80,17 +80,35 @@ const placebid = asyncHandler(async (req, res) => {
   });
 
   const bidres = await biding.save();
+  if(bidres){
+    const bidid = bidres._id
+     updatebid(bidres,bidid)      
+    
+  }
 
   res.status(201).json(bidres);
 });
+//////////////////////////
+////update bid
+const updatebid = asyncHandler(async (req, res,bidres,bidid) => {
+  
+  const auction = await bid.findById(bidid)
+  if(auction){
+    auction.bider.push(bidres)
+    auction.numberOfbids =  auction.bider.length
+    
+  }
+});
 
+
+/////
 export {
   getAuctionById,
   newAuction,
   getOwnAuction,
   getAuction,
   placebid,
-  verifybid,
+  verifybid,updatebid
 };
 /////get verify post
 

@@ -26,13 +26,13 @@ const authUser = asyncHandler(async (req, res) => {
 })
 /////////////////////////////
 const createUserReview = asyncHandler(async (req, res) => {
-  const { rating } = req.body
+  const { rating , _id,meme,name } = req.body
 
-  const producer = await User.findById(req.params.id)
+  const producer = await User.findById({_id})
 
-  if (product) {
-    const alreadyReviewed = User.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
+  if (producer) {
+    const alreadyReviewed = producer.reviews.find(
+      (r) => r.user.toString() === meme.toString()
     )
 
     if (alreadyReviewed) {
@@ -41,20 +41,22 @@ const createUserReview = asyncHandler(async (req, res) => {
     }
 
     const review = {
-      name: req.user.name,
+     // name: req.user.name,
+      name: name,
       rating: Number(rating),
-      user: req.user._id,
+     // user: req.user._id,
+       user: meme,
     }
 
-    User.reviews.push(review)
+    producer.reviews.push(review)
 
-    User.numReviews = User.reviews.length
+    producer.numReviews = producer.reviews.length
 
-    product.rating =
-      User.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      User.reviews.length
+    producer.rating =
+    producer.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    producer.reviews.length
 
-    await User.save()
+    await producer.save()
     res.status(201).json({ message: 'Review added' })
   } else {
     res.status(404)
