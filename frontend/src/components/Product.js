@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from 'react-bootstrap'
 import Rating from './Rating'
+import { Button } from 'react-bootstrap';
 
 const Product = ({ product }) => {
   return (
@@ -24,7 +25,8 @@ const Product = ({ product }) => {
           />
         </Card.Text>
 
-        <Card.Text as='h3'>{product.price}ETB</Card.Text>
+        <Card.Text as='h3'>{product.price}ETB
+        <Button disabled variant="success">Open</Button></Card.Text>
       </Card.Body>
     </Card>
   )
