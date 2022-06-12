@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import  bid  from "../models/auctionModel.js";
+import  bid  from "../models/auctionModel";
 import Room from "../models/room.js";
 
 
@@ -13,7 +13,7 @@ const newAuction = asyncHandler(async (req, res) => {
   if (duration > 10800) duration = 3600;
    const timer = duration;
    try {
-   let auction = new bid({
+   const auction = new bid({
       producerId,
       baseprice,
       product,
@@ -24,15 +24,15 @@ const newAuction = asyncHandler(async (req, res) => {
   });
 
    //Create room for auction
-  let room = new Room({ ad: auction._id });
+  const room = new Room({ ad: "62a536be038b71f2b253c2f3" });
     room = await room.save();
-
+  const createAuction = await auction.save();
 
   auction.room = room._id;
   auction = await auction.save();
 
-  res.status(201).json({auction ,room});
- } catch (err) {
+  res.status(201).json(createAuction ,room);
+} catch (err) {
   console.log(err);
   res.status(500).json({ errors: [{ msg: 'Server error' }] });
 }
@@ -69,38 +69,23 @@ const getAuction = asyncHandler(async (req, res) => {
 //verify bid
 
 const verifybid = asyncHandler(async (req, res) => {
-const {auctionId} = req.body
-  try {
-    let auction = await bid.findById(auctionId)
-    if (!auction) return res.status(400).json({ errors: [{ msg: 'Ad not found' }] });
-    if (!ad.isLive) return res.status(400).json({ errors: [{ msg: 'Auction hasnt started' }] });
-    if (ad.isLive) return res.status(400).json({ errors: [{ msg: 'Already started' }] });
-    auction.isLive = true
-    auction.openAt = new Date();
-    await auction.save();
-    auction.timer = parseInt(auction.duration);
-    //auction.auctionEnded = false;
+  const { closeAt, id } = req.body;
+  const auction = await bid.findById(id);
 
-  } catch (error) {}});
-////////////////
-////Close Biding
-const closebid = asyncHandler(async (req, res) => {
-  
-  const auctionId = req.body
-    try {
-      let auction = await bid.findById(auctionId)
-      if (!auction) return res.status(400).json({ errors: [{ msg: 'Auction not found' }] });
-      if (!ad.isLive) return res.status(400).json({ errors: [{ msg: 'Auction already closed' }] });
-      if (ad.isLive) return res.status(400).json({ errors: [{ msg: 'Auction Is steal Running' }] });
-      auction.isLive = false
-      auction.isEnd = true
-      //auction.openAt = new Date();
-      await auction.save();
-      auction.timer = 0
-      auction.duration =0
-      //auction.auctionEnded = false;
-  
-    } catch (error) {}});
+  if (auction) {
+    auction.openAt = new Date();
+    //auction.openAt = new ISODate()
+    //auction.closeAt = openAt
+    auction.closeAt = closeAt;
+    auction.isLive = true;
+    const verifiedAuction = await auction.save();
+
+    res.json({ verifiedAuction });
+  } else {
+    res.status(404);
+    throw new Error("this not found");
+  }
+});
 
 ////s biding
 //post
@@ -141,7 +126,6 @@ export {
   getOwnAuction,
   getAuction,
   placebid,
-  closebid,
   verifybid,updatebid
 };
 /////get verify post

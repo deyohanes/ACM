@@ -36,6 +36,10 @@ const bidSchema = mongoose.Schema({
       required: true,
       ref: 'Products',
  },
+ currentPrice : {
+    type :Number,
+   required: true,
+ },
  baseprice:{
    type :Number,
    required: true,
@@ -44,7 +48,20 @@ const bidSchema = mongoose.Schema({
    type :Number,
    required : true
  },
+ timer: {
+    type: Number,
+    default: 300,
+  },
+ duration: {
+    type: Number,
+    default: 300,
+  },
  isLive: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  isEnd: {
     type: Boolean,
     required: true,
     default: false,
@@ -54,19 +71,49 @@ const bidSchema = mongoose.Schema({
     required : true,
     default :0
   },
-  bider : [biderModel],
+
   openAt :{
-   type : String,
+   type : Date,
      
   },
   closeAt : { 
-    type : String
+    type : Date
     
-  }
+  },
+  purchasedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
+   currentBidder: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
+  room: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'room',
+  },
+  bids: [
+    {
+      user: {
+        type: String,     
+        required: true,
+      },
+      amount: {
+        type: Number,
+        required: true,
+      },
+      time: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  
   
 },{
  timeStamp : true,
 });
-const bid = mongoose.model("bids", bidSchema);
-const bider = mongoose.model("bider",biderModel)
-export default  bid
+const bid = mongoose.model("bidss", bidSchema);
+const bider = mongoose.model("biders",biderModel)
+//export  {bid,bider};
+ export default  bid

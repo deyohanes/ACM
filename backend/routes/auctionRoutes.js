@@ -1,24 +1,32 @@
 import express from 'express'
 const router = express.Router()
 import {
-    closebid,updatebid,newAuction,getOwnAuction,getAuction,placebid,verifybid,getAuctionById
+    addAd,retrieveAds,findAd,updateAd
+    //,deleteAd,updateAd,findAd,retrieveAds
    
-} from '../controllers/bidController.js'
+} from '../controllers/ad.js'
 
 
-router.post('/',newAuction).post('/placebid',placebid)
+router.post('/nauction',addAd) 
+router.get('/retriev',retrieveAds)
+router.get('/byid',findAd)
+router.put('/update/:id',updateAd)
+
+
+export default router
+/*
 router.get('/own',getOwnAuction)
 router.get('/byid',getAuctionById)
-router.put('/close',closebid)
+
 router.get('/all',getAuction)
 router.put('/verify',verifybid)
 router.put('/updatebid',updatebid)
 
 
 
+*/
 
 
-export default router
 
 /*
 router.route('/myorders').get(protect, getMyOrders)

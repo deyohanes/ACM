@@ -7,6 +7,8 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import connectDB from './config/db.js'
 
 import productRoutes from './routes/productRoutes.js'
+import auctionRoutes from './routes/auctionRoutes.js'
+
 import productsRoutes from './routes/productsRoutes.js'
 import bidRoutes from './routes/bidRoutes.js'
 import userRoutes from './routes/userRoutes.js'
@@ -31,6 +33,8 @@ app.use('/api/commodity' ,commodityRoutes)
 app.use('/api/warehouse' ,warehouseRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/auction', bidRoutes)
+app.use('/api/ad', auctionRoutes)
+
 app.use('/api/product', productsRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
