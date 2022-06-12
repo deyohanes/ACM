@@ -105,21 +105,33 @@ const closebid = asyncHandler(async (req, res) => {
 ////s biding
 //post
 const placebid = asyncHandler(async (req, res) => {
-  const { id, auctionId, bid } = req.body;
-  const biding = new bider({
-    id,
-    auctionId,
-    bid,
-  });
+  const { users, ad, bids } = req.body;
+  const bb = parseInt(bids)
+  let auction = await bid.findById(ad)
+  const newd = auction.currentPrice
+ // res.status(201).json(auction);
+  if(newd){
+    if (newd > bb) {
+      res.status(201).json({message : "price too low"});
+    } 
+    if(newd === bb){
+      res.status(201).json({message : "price too low"});
+    }
+    if(newd < bb){
+     
+     
+      auction.currentPrice = bb
+      auction.currentBidder = users
+      await auction.save()
+      res.status(201).json(auction);
+    }
 
-  const bidres = await biding.save();
-  if(bidres){
-    const bidid = bidres._id
-     updatebid(bidres,bidid)      
-    
+
+  }else {
+  
+    res.status(404).json({message : "No room found"});
   }
-
-  res.status(201).json(bidres);
+  
 });
 //////////////////////////
 ////update bid

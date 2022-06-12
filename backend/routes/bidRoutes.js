@@ -6,7 +6,8 @@ import {
 } from '../controllers/bidController.js'
 
 
-router.post('/',newAuction).post('/placebid',placebid)
+router.post('/',newAuction)
+router.post('/placebid',placebid)
 router.get('/own',getOwnAuction)
 router.get('/byid',getAuctionById)
 router.put('/close',closebid)
