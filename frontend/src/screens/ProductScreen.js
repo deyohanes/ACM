@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import axios from "axios";
+
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
@@ -16,6 +18,9 @@ const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
+  const [products, setProduct] = useState()
+  const [bidprice, setbidPrice] = useState('')
+
 
   const dispatch = useDispatch()
 
@@ -33,6 +38,17 @@ const ProductScreen = ({ history, match }) => {
   } = productReviewCreate
 
   useEffect(() => {
+   const a= product._id 
+  async function getAuctionById(a) {
+    try {
+      const response = await axios.get("/api/auction/byid", a);
+      const data = response.data;
+      setProduct(data);
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
     if (successProductReview) {
       setRating(0)
       setComment('')
@@ -56,6 +72,20 @@ const ProductScreen = ({ history, match }) => {
       })
     )
   }
+
+  
+  async function addbid(bidprice) {
+    try {
+
+      const response = await axios.get("/api/auction/placebid", bidprice);
+      const data = response.data;
+      setProduct(data);
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
   return (
     <>
@@ -83,8 +113,12 @@ const ProductScreen = ({ history, match }) => {
                     value={product.rating}
                     text={`${product.numReviews} reviews`}
                   />
+                 
                 </ListGroup.Item>
-                <ListGroup.Item>Price: {product.price}ETB/Ton</ListGroup.Item>
+{//products.baseprice ?(<> <ListGroup.Item>Price: {products.baseprice}ETB</ListGroup.Item></>):(<><ListGroup.Item>Product is Not For Sale</ListGroup.Item></>)
+
+}
+               
                 <ListGroup.Item>
                   Description: {product.description}
                 </ListGroup.Item>
@@ -100,7 +134,7 @@ const ProductScreen = ({ history, match }) => {
                     <Row>
                       <Col>Price:</Col>
                       <Col>
-                        <strong> <input name='price'/> ETB</strong>
+                        <strong> <input value={bidprice}   onChange={(e) => setbidPrice(e.target.value)}name='price'/> ETB</strong>
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -109,7 +143,8 @@ const ProductScreen = ({ history, match }) => {
                     <Row>
                       <Col>Status:</Col>
                       <Col>
-                        {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                        {//products.isLive   ? 'Auction Open' : 'Auction Not Started'
+                        }
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -119,19 +154,8 @@ const ProductScreen = ({ history, match }) => {
                       <Row>
                         <Col>Quantity</Col>
                         <Col>
-                          <Form.Control
-                            as='select'
-                            value={qty}
-                            onChange={(e) => setQty(e.target.value)}
-                          >
-                            {[...Array(product.countInStock).keys()].map(
-                              (x) => (
-                                <option key={x + 1} value={x + 1}>
-                                  {x + 1}
-                                </option>
-                              )
-                            )}
-                          </Form.Control>
+                        <strong> {//products.amount
+                        }  Ton</strong>
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -144,7 +168,8 @@ const ProductScreen = ({ history, match }) => {
                       type='button'
                       disabled={product.countInStock === 0}
                     >
-                      Add To Cart
+                     
+                     Bid
                     </Button>
                   </ListGroup.Item>
                 </ListGroup>
@@ -204,6 +229,7 @@ const ProductScreen = ({ history, match }) => {
                       <Button
                         disabled={loadingProductReview}
                         type='submit'
+                        onSubmit={addbid}
                         variant='primary'
                       >
                         Submit
