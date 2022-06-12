@@ -75,7 +75,7 @@ const createProduct = asyncHandler(async (req, res) => {
     user: producer,
     name: commudity,
     symbol: symbol,
-    warehouseSymbol :  warehouse,
+    warehouseSymbol : warehouse,
     image: image,
     orgin: orgin,
     countInStock: parseInt(countInStock) ,
