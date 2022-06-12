@@ -1,41 +1,74 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Form, Button, Row, Col ,ListGroup} from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../components/Message'
-import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-import { register } from '../actions/userActions'
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import axios from "axios";
 
-const RegisterScreen = ({ location, history }) => {
+
+const Registeradmin = ({  history }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState('')
+  const [region, setRegion] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState(null)
-console.log(role)
-  const dispatch = useDispatch()
 
-  const userRegister = useSelector((state) => state.userRegister)
-  const { loading, error, userInfo } = userRegister
+  const dispatch = useDispatch();
 
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const userList = useSelector((state) => state.userList);
+  const { loading, error } = userList;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  useEffect(() => {
-    if (userInfo) {
-      history.push(redirect)
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
+
+
+ const registeradm = (name, email, password,role,region) => async (dispatch) => {
+    try {
+     
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+  
+      const { data } = await axios.post(
+        '/api/users/admin',
+        { name, email, password,role,region },
+        config
+      )
+       console.log.apply(data)
+      
+    } catch (error) {
+      
     }
-  }, [history, userInfo, redirect])
+  }
 
+
+ 
   const submitHandler = (e) => {
     e.preventDefault()
+    const role = "radmin"
     if (password !== confirmPassword) {
       setMessage('Passwords do not match')
     } else {
-      dispatch(register(name, email, password,role))
+        
+      registeradm(name, email, password,role,region)
     }
   }
+
+
+  useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+     
+    } else {
+      history.push("/login");
+    }
+  }, [dispatch, history, successDelete, userInfo]);
+
 
   return (
     <FormContainer>
@@ -83,39 +116,25 @@ console.log(role)
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="category">
-            <ListGroup.Item>
-              <Row>
-                <Col>Role</Col>
-                <Col>
-                  <Form.Control
-                    as="select"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option>producer</option>
-                    <option>member</option>
-                  </Form.Control>
-                </Col>
-              </Row>
-            </ListGroup.Item>
-          </Form.Group>
+
+        <Form.Group controlId='email'>
+          <Form.Label>Region</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Region'
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
 
         <Button type='submit' variant='primary'>
           Register
         </Button>
       </Form>
 
-      <Row className='py-3'>
-        <Col>
-          Have an Account?{' '}
-          <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
-            Login
-          </Link>
-        </Col>
-      </Row>
+    
     </FormContainer>
   )
 }
 
-export default RegisterScreen
+export default Registeradmin

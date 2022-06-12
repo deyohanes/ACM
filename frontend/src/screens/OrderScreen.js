@@ -18,7 +18,6 @@ import {
 
 const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id
-  const [isAdmin, setIsAdmin] = useState(false)
 
   const [sdkReady, setSdkReady] = useState(false)
 
@@ -85,6 +84,22 @@ const OrderScreen = ({ match, history }) => {
   const deliverHandler = () => {
     dispatch(deliverOrder(order))
   }
+console.log(JSON.stringify)
+
+  async function Delivered() {
+   
+
+
+    try {
+        await axios({
+            method: 'put',
+            url: `/api/orders/deliver/${order._id}`,
+          });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+ 
 
   return loading ? (
     <Loader />
@@ -117,12 +132,9 @@ const OrderScreen = ({ match, history }) => {
                 </Message>
               ) : (<> <Message variant='danger'>Not Delivered</Message>
                 <Form.Group controlId='isadmin'>
-              <Form.Check
-                type='checkbox'
-                label='Delivered'
-                checked={order.isDelivered}
-                onChange={(e) => setIsAdmin(e.target.checked)}
-              ></Form.Check>
+                <Button onClick={Delivered}>
+                 Delivered
+                </Button>
             </Form.Group>
               </>
                

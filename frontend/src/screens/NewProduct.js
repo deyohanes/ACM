@@ -17,16 +17,17 @@ const NewProduct = ({ match, history }) => {
   const productId = match.params.id;
   const [commudity, setCommudity] = useState("");
   const [warehouse, setWarehouse] = useState("");
+  const [description, setDescription] = useState("");
+  const [symbol, setSymbol] = useState("");
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
-  const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
   const [commudityName, setCommudityName] = useState([]);
   const [warehouseName, setwarehouseName] = useState([]);
   const [producer, setProducer] = useState("");
-  const [symbol, setSymbol] = useState("");
+  
   const [level, setLevel] = useState("");
   const [market, setMarket] = useState("");
   const [producerid, setProducerid] = useState("");
@@ -100,13 +101,13 @@ const NewProduct = ({ match, history }) => {
             data: {
               producer:  producer,
               commudity: commudity,
-              symbol: "symbol",
-              warehouse : "warehouse",
+              symbol: symbol,
+              warehouse : warehouse,
               image: image,
               orgin: brand,
               countInStock:countInStock ,
               level: level,
-              description: "description",
+              description: "Level 4 Washed Export",
               market: market,
               category: category
                
@@ -119,7 +120,6 @@ const NewProduct = ({ match, history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     //const id = getid(email)
-setDescription(description)
 addproduct()
   };
 

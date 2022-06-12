@@ -89,7 +89,7 @@ const ProductScreen = ({ history, match }) => {
                   Description: {product.description}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Link to={'/producer'}>Producer: {product._id}</Link>
+                  <Link to={'/producer'}>Producer: {product.user}</Link>
                 </ListGroup.Item>
               </ListGroup>
             </Col>

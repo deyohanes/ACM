@@ -16,6 +16,7 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      role : user.role,
       token: generateToken(user._id),
     })
   } else {
@@ -23,7 +24,43 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid email or password')
   }
 })
+/////////////////////////////
+const createUserReview = asyncHandler(async (req, res) => {
+  const { rating } = req.body
 
+  const producer = await User.findById(req.params.id)
+
+  if (product) {
+    const alreadyReviewed = User.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    )
+
+    if (alreadyReviewed) {
+      res.status(400)
+      throw new Error('Producer already reviewed')
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      user: req.user._id,
+    }
+
+    User.reviews.push(review)
+
+    User.numReviews = User.reviews.length
+
+    product.rating =
+      User.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      User.reviews.length
+
+    await User.save()
+    res.status(201).json({ message: 'Review added' })
+  } else {
+    res.status(404)
+    throw new Error('not found')
+  }
+})
 ////////////////////////
 const getId = asyncHandler(async (req, res) => {
   const { email } = req.body
@@ -44,7 +81,7 @@ const getId = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body
+  const { name, email, password ,role} = req.body
 
   const userExists = await User.findOne({ email })
 
@@ -57,6 +94,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    role,
   })
 
   if (user) {
@@ -65,7 +103,43 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      role :user.role,
       token: generateToken(user._id),
+    })
+  } else {
+    res.status(400)
+    throw new Error('Invalid user data')
+  }
+})
+///////////////////////////
+//admin register
+const registerAdmin = asyncHandler(async (req, res) => {
+  const { name, email, password ,role,region} = req.body
+
+  const userExists = await User.findOne({ email })
+
+  if (userExists) {
+    res.status(400)
+    throw new Error('User already exists')
+  }
+    const isAdmin = true
+    const user = await User.create({
+    name,
+    email,
+    password,
+    isAdmin,
+    role,
+    region
+  })
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      role :user.role,
+      region : user.region,
     })
   } else {
     res.status(400)
@@ -84,7 +158,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin,
+
     })
   } else {
     res.status(404)
@@ -166,7 +240,7 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
-    user.isAdmin = req.body.isAdmin
+    user.isReal = req.body.isAdmin
 
     const updatedUser = await user.save()
 
@@ -174,7 +248,7 @@ const updateUser = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
+      isReal: updatedUser.isAdmin,
     })
   } else {
     res.status(404)
@@ -192,4 +266,6 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  createUserReview,
+  registerAdmin
 }

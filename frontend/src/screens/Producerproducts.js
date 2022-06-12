@@ -1,6 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from "react";
+import { axios } from 'axios';
+import { FaSearch , FaShareAlt } from "react-icons/fa";
 import { LinkContainer } from 'react-router-bootstrap'
-import { Table, Button, Row, Col } from 'react-bootstrap'
+import {   Table,
+    Button,
+    Row,
+    Col,
+    InputGroup,
+    FormControl,
+    Form, } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -12,9 +20,9 @@ import {
 } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
-const ProductListScreen = ({ history, match }) => {
+const Producerproducts = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1
-
+  const [email, setEmail] = useState('')
   const dispatch = useDispatch()
 
   const productList = useSelector((state) => state.productList)
@@ -38,18 +46,70 @@ const ProductListScreen = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
-  useEffect(() => {
-    dispatch({ type: PRODUCT_CREATE_RESET })
 
-    if (!userInfo || !userInfo.isAdmin) {
+  async function getProducts() {
+   
+        try {
+            const id = {
+                "user" : "626fdea97f20b6ca874ae158"
+             }
+            const config = {
+                headers: {
+                    "Content-type": "application/json"
+                },
+            };   
+            const { response } = await  axios.get("/api/products/own",
+                {
+                    id 
+                },
+                config
+            );
+         const ownproducts = response.data;
+         console.log(ownproducts);       
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+        const config = {
+            headers: {
+                "Content-type": "application/json"
+            },
+        };
+        const { response } = await axios.post(
+            "/api/products/search",
+            {
+                email 
+            },
+            config
+        );
+        const name = response.data;
+        console.log(name);
+        setEmail(name);
+        
+    } catch (error) {
+      console.error(error);
+    }
+};
+ 
+  useEffect(() => {
+    getProducts()
+    if (!userInfo ) {
       history.push('/login')
+      
     }
 
     if (successCreate) {
-      history.push(`/admin/newpro`)
+      history.push(`/admin/product/${createdProduct._id}/edit`)
+      
     } else {
       dispatch(listProducts('', pageNumber))
+     
     }
+    
   }, [
     dispatch,
     history,
@@ -60,26 +120,42 @@ const ProductListScreen = ({ history, match }) => {
     pageNumber,
   ])
 
+
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure')) {
       dispatch(deleteProduct(id))
     }
   }
 
-  const createProductHandler = () => {
-    dispatch(createProduct())
-  }
-
+ 
   return (
     <>
       <Row className='align-items-center'>
         <Col>
           <h1>Products</h1>
         </Col>
-        <Col className='text-right'>
-          <Button className='my-3' onClick={createProductHandler}>
-            <i className='fas fa-plus'></i> Create Product
-          </Button>
+        <Col>
+          <Form onSubmit={submitHandler}>
+            <Row className="align-items-center">
+              <Col xs="auto">
+                <InputGroup className="mb-2"   >
+                  <FormControl
+                    id="inlineFormInputGroup"
+                    placeholder="Search"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </InputGroup>
+              </Col>
+             
+              <Col xs="auto">
+                <Button type="submit" className="mb-2">
+                  <FaSearch />
+                  
+                </Button>
+              </Col>
+            </Row>
+          </Form>
         </Col>
       </Row>
       {loadingDelete && <Loader />}
@@ -93,10 +169,9 @@ const ProductListScreen = ({ history, match }) => {
       ) : (
         <>
           <Table striped bordered hover responsive className='table-sm'>
-          <thead>
+            <thead>
               <tr>
                 <th>ID</th>
-                <th>Producer</th>
                 <th>NAME</th>
                 <th>CountInStock</th>
                 <th>Symbol</th>
@@ -108,24 +183,16 @@ const ProductListScreen = ({ history, match }) => {
               {products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
-                  <td>{product.user}</td>
                   <td>{product.name}</td>
-                  <td>{product.countInStock}</td>
+                  <td>${product.countInStock}</td>
                   <td>{product.symbol}</td>
-                  <td>{product.warehouseSymbol}</td>
+                  <td>{product.warehouse}</td>
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant='light' className='btn-sm'>
-                        <i className='fas fa-edit'></i>
+                      <Button  onClick={() => deleteHandler(product._id)}variant='light' className='btn-sm'>
+                      <FaShareAlt/>POST
                       </Button>
                     </LinkContainer>
-                    <Button
-                      variant='danger'
-                      className='btn-sm'
-                      onClick={() => deleteHandler(product._id)}
-                    >
-                      <i className='fas fa-trash'></i>
-                    </Button>
                   </td>
                 </tr>
               ))}
@@ -138,4 +205,4 @@ const ProductListScreen = ({ history, match }) => {
   )
 }
 
-export default ProductListScreen
+export default Producerproducts
