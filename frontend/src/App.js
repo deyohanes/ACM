@@ -26,6 +26,11 @@ import Warehouselist from './screens/Warehouselist'
 import Commoditylist from './screens/Commoditylist'
 import Producerproducts from './screens/Producerproducts'
 import Registeradmin from './screens/Registeradmin';
+import Bids from './screens/Bids';
+import VerifyPost from './screens/VerifyPost';
+
+
+PostForm
 
 const App = () => {
   return (
@@ -52,7 +57,10 @@ const App = () => {
             component={ProductListScreen}
             exact
           />
+          <Route path='/bids' component={Bids} />
            <Route path='/admin/newpro' component={NewProduct} />
+           <Route path='/verifypost' component={VerifyPost} />
+
            <Route path='/admin/commodity' component={Commodity} />
            <Route path='/admin/warehouse' component={Warehouse} />
            <Route path='/admin/warehousetlist' component={Warehouselist} />
