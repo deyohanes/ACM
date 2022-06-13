@@ -285,3 +285,51 @@ export const listTopProducts = () => async (dispatch) => {
     })
   }
 }
+ 
+
+export const biding = (datas) => async (dispatch) => {
+   try {
+ 
+    dispatch({ type: PRODUCT_TOP_REQUEST })
+     const data = await axios.post(
+      `/api/products/auction/placebid`,
+       datas
+    )
+    dispatch({
+      type: PRODUCT_TOP_SUCCESS,
+      payload: data,
+    })
+    console.log(data)
+   } catch (error) {
+    
+   }
+}
+
+export const verifybid = (name, email, password,role) => async (dispatch) => {
+  try {
+    
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+
+     const { data } = await axios.put(
+      '/auction/verify',
+      {timer},
+     
+    )
+ 
+
+   // localStorage.setItem('userInfo', JSON.stringify(data))
+  } catch (error) {
+    dispatch({
+      type: USER_REGISTER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -13,21 +12,25 @@ import {
   Form,
 } from "react-bootstrap";
 import Rating from "../components/Rating";
+import Rate from "../components/Rate";
+
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
+import Countdown from "react-countdown";
 import {
   listProductDetails,
   createProductReview,
+ biding
 } from "../actions/productActions";
 
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(1);
+  //const [qty, setQty] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [products, setProduct] = useState();
+  //const [products, setProduct] = useState();
   const [bidprice, setbidPrice] = useState("");
 
   const dispatch = useDispatch();
@@ -37,7 +40,7 @@ const ProductScreen = ({ history, match }) => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const productPostcreate = useSelector((state) => state.productPostcreate);
+  //const productPostcreate = useSelector((state) => state.productPostcreate);
 
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
   const {
@@ -46,18 +49,54 @@ const ProductScreen = ({ history, match }) => {
     error: errorProductReview,
   } = productReviewCreate;
 
-  useEffect(() => {
-    const a = product._id;
-    async function getAuctionById(a) {
-      try {
-        const response = await axios.get("/api/auction/byid", a);
-        const data = response.data;
-        setProduct(data);
-        console.log(data);
-      } catch (error) {
-        console.error(error);
+  
+   async function bidngHandler() {
+     // console.log(product._id,bidprice)
+        //      const id = product._id
+        // const  userId = userInfo._id
+        //   const price =  bidprice
+        const pid = product._id
+        const uid = userInfo._id
+        const bd = parseInt(bidprice)
+        const a=  bd.toString()
+        console.log(typeof(a))
+      const  {data} = {
+        "id": pid,
+        "userId": uid,
+        "price": bd
+        }
+      await axios.post("/api/products/auction/placebid",data)
+      await axios.post("/api/products/auction/placebid",null,{params})
+    //biding(product._id,userInfo._id,bidprice)
+  
+      
+        //   const id = product._id
+        //const  userId = userInfo._id
+          //const price =  bidprice
+      
+      //await axios.post("/api/products/auction/placebid",id,userId,price)
+     
       }
+      
+      
+         /*
+    try {
+      const price = parseInt(bidprice)
+      const id = product._id;
+      const userId = userInfo._id;
+       console.log(userId)
+      const response = await axios.put("/api/products/auction/placebid",id,userId,price)
+      const bidsuccess = response.data;
+      console.log(bidsuccess);
+    } catch (error) {
+      console.error(error);
     }
+ 
+*/
+  
+
+
+useEffect(() => {
     if (successProductReview) {
       setRating(0);
       setComment("");
@@ -66,12 +105,15 @@ const ProductScreen = ({ history, match }) => {
       dispatch(listProductDetails(match.params.id));
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
     }
-  }, [dispatch, match, successProductReview]);
-
-  const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`);
+  }, [product._id, dispatch, match, successProductReview]);
+  /*
+  const bidngHandler = () => {
+    const id = product._id
+    const userId  =userInfo._id
+    biding( id, userId,  price)
+    //history.push(`/cart/${match.params.id}?qty=${qty}`);
   };
-
+*/
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -81,19 +123,6 @@ const ProductScreen = ({ history, match }) => {
       })
     );
   };
-
-  async function addbid(bidprice) {
-    try {
-      const userid = userInfo._id
-      console.log
-      const response = await axios.get("/api/auction/placebid", bidprice);
-      const data = response.data;
-      setProduct(data);
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <>
@@ -120,14 +149,23 @@ const ProductScreen = ({ history, match }) => {
                       <h3>{product.name}</h3>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <Rating
-                        value={product.rating}
-                        text={`${product.numReviews} reviews`}
+                      <Rate
+                        // value={product.rating}
+                        text={`Number Of Bids ${product.numberOfbids} `}
                       />
                     </ListGroup.Item>
-                    {
-                      // auctions.baseprice ?(<> <ListGroup.Item>Price: {auctions.baseprice}ETB</ListGroup.Item></>):(<><ListGroup.Item>Product is Not For Sale</ListGroup.Item></>)
-                    }
+                    {product.currentPrice ? (
+                      <>
+                        {" "}
+                        <ListGroup.Item>
+                          Latest Bid Price: {product.currentPrice}ETB
+                        </ListGroup.Item>
+                      </>
+                    ) : (
+                      <>
+                        <ListGroup.Item>Product is Not For Sale</ListGroup.Item>
+                      </>
+                    )}
 
                     <ListGroup.Item>
                       Description: {product.description}
@@ -151,6 +189,7 @@ const ProductScreen = ({ history, match }) => {
                                 <strong>
                                   {" "}
                                   <input
+                                  type="number"
                                     value={bidprice}
                                     onChange={(e) =>
                                       setbidPrice(e.target.value)
@@ -167,9 +206,13 @@ const ProductScreen = ({ history, match }) => {
                             <Row>
                               <Col>Status:</Col>
                               <Col>
-                                {
-                                  // auctions.isLive   ? 'Auction Open' : 'Auction Not Started'
-                                }
+                                Ends In:{" "}
+                                <Countdown date={5000 - product.timer} />,
+                              </Col>
+                              <Col>
+                                {product.isLive
+                                  ? "Auction is Started"
+                                  : "Auction Not Started"}
                               </Col>
                             </Row>
                           </ListGroup.Item>
@@ -179,13 +222,7 @@ const ProductScreen = ({ history, match }) => {
                               <Row>
                                 <Col>Quantity</Col>
                                 <Col>
-                                  <strong>
-                                    {" "}
-                                    {
-                                      //products.amount
-                                    }{" "}
-                                    Ton
-                                  </strong>
+                                  <strong> {product.amount} Ton</strong>
                                 </Col>
                               </Row>
                             </ListGroup.Item>
@@ -193,10 +230,10 @@ const ProductScreen = ({ history, match }) => {
 
                           <ListGroup.Item>
                             <Button
-                              onClick={addToCartHandler}
+                              onClick={bidngHandler}
                               className="btn-block"
                               type="button"
-                              disabled={product.countInStock === 0}
+                              disabled={!product.isLive }
                             >
                               Bid
                             </Button>
@@ -268,7 +305,7 @@ const ProductScreen = ({ history, match }) => {
                               <Button
                                 disabled={loadingProductReview}
                                 type="submit"
-                                onSubmit={addbid}
+                                // onSubmit={addbid}
                                 variant="primary"
                               >
                                 Submit
@@ -310,6 +347,7 @@ const ProductScreen = ({ history, match }) => {
                     <ListGroup.Item>
                       <h3>{product.name}</h3>
                     </ListGroup.Item>
+
                     <ListGroup.Item>
                       <Rating
                         value={product.rating}
@@ -329,13 +367,10 @@ const ProductScreen = ({ history, match }) => {
                   </ListGroup>
                 </Col>
 
-
-
                 <Col md={3}>
-                   
-                   {userInfo ? 
-                   (<>
-                   <Card>
+                  {userInfo ? (
+                    <>
+                      <Card>
                         <ListGroup variant="flush">
                           <ListGroup.Item>
                             <Row>
@@ -386,7 +421,7 @@ const ProductScreen = ({ history, match }) => {
 
                           <ListGroup.Item>
                             <Button
-                              onClick={addToCartHandler}
+                              onClick={bidngHandler}
                               className="btn-block"
                               type="button"
                               disabled={product.countInStock === 0}
@@ -396,14 +431,10 @@ const ProductScreen = ({ history, match }) => {
                           </ListGroup.Item>
                         </ListGroup>
                       </Card>
-                   </>) 
-                   :
-                   (<>
-                   </>)}
-                      
-                    
-
-                
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </Col>
               </Row>
               <Row>
@@ -422,71 +453,59 @@ const ProductScreen = ({ history, match }) => {
                       </ListGroup.Item>
                     ))}
 
-
-
-
-
-
-
-
-                   
-                        <ListGroup.Item>
-                          <h2>Write a Customer Review</h2>
-                          {successProductReview && (
-                            <Message variant="success">
-                              Review submitted successfully
-                            </Message>
-                          )}
-                          {loadingProductReview && <Loader />}
-                          {errorProductReview && (
-                            <Message variant="danger">
-                              {errorProductReview}
-                            </Message>
-                          )}
-                          {userInfo ? (
-                            <Form onSubmit={submitHandler}>
-                              <Form.Group controlId="rating">
-                                <Form.Label>Rating</Form.Label>
-                                <Form.Control
-                                  as="select"
-                                  value={rating}
-                                  onChange={(e) => setRating(e.target.value)}
-                                >
-                                  <option value="">Select...</option>
-                                  <option value="1">1 - Poor</option>
-                                  <option value="2">2 - Fair</option>
-                                  <option value="3">3 - Good</option>
-                                  <option value="4">4 - Very Good</option>
-                                  <option value="5">5 - Excellent</option>
-                                </Form.Control>
-                              </Form.Group>
-                              <Form.Group controlId="comment">
-                                <Form.Label>Comment</Form.Label>
-                                <Form.Control
-                                  as="textarea"
-                                  row="3"
-                                  value={comment}
-                                  onChange={(e) => setComment(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
-                              <Button
-                                disabled={loadingProductReview}
-                                type="submit"
-                                onSubmit={addbid}
-                                variant="primary"
-                              >
-                                Submit
-                              </Button>
-                            </Form>
-                          ) : (
-                            <Message>
-                              Please <Link to="/login">sign in</Link> to write a
-                              review{" "}
-                            </Message>
-                          )}
-                        </ListGroup.Item>
-                       
-                    
+                    <ListGroup.Item>
+                      <h2>Write a Customer Review</h2>
+                      {successProductReview && (
+                        <Message variant="success">
+                          Review submitted successfully
+                        </Message>
+                      )}
+                      {loadingProductReview && <Loader />}
+                      {errorProductReview && (
+                        <Message variant="danger">{errorProductReview}</Message>
+                      )}
+                      {userInfo ? (
+                        <Form onSubmit={submitHandler}>
+                          <Form.Group controlId="rating">
+                            <Form.Label>Rating</Form.Label>
+                            <Form.Control
+                              as="select"
+                              value={rating}
+                              onChange={(e) => setRating(e.target.value)}
+                            >
+                              <option value="">Select...</option>
+                              <option value="1">1 - Poor</option>
+                              <option value="2">2 - Fair</option>
+                              <option value="3">3 - Good</option>
+                              <option value="4">4 - Very Good</option>
+                              <option value="5">5 - Excellent</option>
+                            </Form.Control>
+                          </Form.Group>
+                          <Form.Group controlId="comment">
+                            <Form.Label>Comment</Form.Label>
+                            <Form.Control
+                              as="textarea"
+                              row="3"
+                              value={comment}
+                              onChange={(e) => setComment(e.target.value)}
+                            ></Form.Control>
+                          </Form.Group>
+                          <Button
+                            disabled={loadingProductReview}
+                            type="submit"
+                            // onSubmit={addbid}
+                            variant="primary"
+                          >
+                            Submit
+                          </Button>
+                        </Form>
+                      ) : (
+                        <Message>
+                          Please <Link to="/login">sign in</Link> to write a
+                          review{" "}
+                        </Message>
+                      )}
+                    </ListGroup.Item>
                   </ListGroup>
                 </Col>
               </Row>
