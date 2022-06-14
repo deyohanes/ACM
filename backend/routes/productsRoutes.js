@@ -15,6 +15,7 @@ router.route('/').get(getProducts).post(protect, admin, createProduct)
 router.route('/:id/reviews').post(protect, createProductReview)
 router.get('/top', getTopProducts)
 router.post('/new', createProduct)
+router.post('/new', createProduct)
 
 router
   .route('/:id')
