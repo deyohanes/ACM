@@ -50,7 +50,12 @@ const ProductScreen = ({ history, match }) => {
   } = productReviewCreate;
     const Ref = useRef(null);
   
+    const addToCartHandler = () => {
+      history.push(`/cart/${match.params.id}?qty=1`)
+    }
+
     async function bidngHandler() {
+
       
       // console.log(product._id,bidprice)
          //      const id = product._id
@@ -67,6 +72,7 @@ const ProductScreen = ({ history, match }) => {
          "price": bd
          }
        await axios.post("/api/products/auction/placebid",data)
+      
      //  await axios.post("/api/products/auction/placebid",null)
      //biding(product._id,userInfo._id,bidprice)
    
@@ -163,6 +169,7 @@ useEffect(() => {
     //history.push(`/cart/${match.params.id}?qty=${qty}`);
   };
 */
+
    const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -173,8 +180,10 @@ useEffect(() => {
     );
   };
   const onClickReset = () => {
-    clearTimer(getDeadTime());
+    addToCartHandler()
+    //clearTimer(getDeadTime());
 }
+
   return (
     <>
       {userInfo ? (
@@ -217,10 +226,15 @@ useEffect(() => {
                         <ListGroup.Item>Product is Not For Sale</ListGroup.Item>
                       </>
                     )}
-
+                    {
+                      product.isEnd ? (<> <ListGroup.Item>
+                        Winner: {product.bids.user}
+                      </ListGroup.Item></>):(<></>)
+                    }
                     <ListGroup.Item>
                       Description: {product.description}
                     </ListGroup.Item>
+                   
                     <ListGroup.Item>
                       <Link to={"/producer"}>Producer: {product.user}</Link>
                     </ListGroup.Item>
@@ -231,7 +245,11 @@ useEffect(() => {
                     <></>
                   ) : (
                     <>
-                      <Card>
+                      
+                      {
+                        userInfo.role == "member" 
+                         ?(<>
+                         <Card>
                         <ListGroup variant="flush">
                           <ListGroup.Item>
                             <Row>
@@ -284,8 +302,8 @@ useEffect(() => {
                           )}
 
                           <ListGroup.Item>
-                            {
-                                <Button
+                            {product.isPosted ?(<>
+                              <Button
                                 onClick={bidngHandler}
                               
                                 className="btn-block"
@@ -293,12 +311,31 @@ useEffect(() => {
                                 disabled={!product.isLive  ||   ( product.currentPrice > bidprice) }
                               >
                                 Bid
-                              </Button> 
+                              </Button> </>) : (<>   <Button
+                                onClick={onClickReset}
+                              
+                                className="btn-block"
+                                type="button"
+                                disabled={product.isEnd }
+                              >
+                                Add To Cart
+                              </Button> </>)
+                             
                             }
                            
                           </ListGroup.Item>
                         </ListGroup>
                       </Card>
+                        </>)
+                        :
+                        (<></>)
+                      }
+                      
+                     
+
+
+
+
                     </>
                   )}
                 </Col>
@@ -318,8 +355,10 @@ useEffect(() => {
                         <p>{review.comment}</p>
                       </ListGroup.Item>
                     ))}
-                    {userInfo.isAdmin ? (
-                      <></>
+                    {
+                   userInfo.role ==="producer" &&  userInfo.isAdmin ? (
+                      <>
+                        </>
                     ) : (
                       <>
                         <ListGroup.Item>

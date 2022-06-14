@@ -29,9 +29,10 @@ import Registeradmin from './screens/Registeradmin';
 import Bids from './screens/Bids';
 import VerifyPost from './screens/VerifyPost';
 import PostForm from './screens/PostForm';
+import Sold from './screens/Soled'
 
 
- 
+
 
 const App = () => {
   return (
@@ -47,6 +48,8 @@ const App = () => {
           <Route path='/postform/:id' component={PostForm} />
 
           <Route path='/login' component={LoginScreen} />
+          <Route path='/sold' component={Sold} />
+
           <Route path='/producer' component={Producer} />
           <Route path='/register' component={RegisterScreen} />
           <Route path='/profile' component={ProfileScreen} />
@@ -62,7 +65,7 @@ const App = () => {
           />
           <Route path='/bids' component={Bids} />
            <Route path='/admin/newpro' component={NewProduct} />
-           <Route path='/verifypost' component={VerifyPost} />
+           <Route path='/verifypost/:id' component={VerifyPost} />
 
            <Route path='/admin/commodity' component={Commodity} />
            <Route path='/admin/warehouse' component={Warehouse} />

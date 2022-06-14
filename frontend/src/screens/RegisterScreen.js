@@ -12,6 +12,8 @@ const RegisterScreen = ({ location, history }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('')
+  const [region, setRegion] = useState('')
+
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState(null)
 console.log(role)
@@ -81,6 +83,15 @@ console.log(role)
             placeholder='Confirm password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId='name'>
+          <Form.Label>Region</Form.Label>
+          <Form.Control
+            type='Region'
+            placeholder='Enter Region'
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId="category">

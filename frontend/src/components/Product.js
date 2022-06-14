@@ -32,7 +32,7 @@ const Product = ({ product }) => {
             </>
           {product.currentPrice}ETB
         {
-          product.isLive ? (<> <Button  variant="success">Open</Button></>) : (<>  <Button disabled variant="danger">Not Started</Button></>)
+          product.isLive ? (<> <Button  variant="success">Open</Button></>) : (<>{product.isEnd ? (<> <Button disabled variant="danger">Bid Closed</Button></>):(<> <Button disabled variant="danger">Not Started</Button></>)}</>)
         }
    </Card.Text>
       </Card.Body>

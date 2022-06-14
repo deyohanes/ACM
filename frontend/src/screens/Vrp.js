@@ -9,7 +9,7 @@ import FormContainer from '../components/FormContainer'
 import { getUserDetails, updateUser } from '../actions/userActions'
 import axios from "axios";
 
-const VerifyPost = ({ match, history }) => {
+const Vrp = ({ match, history }) => {
   const userId = match.params.id
   const [warehouseName, setwarehouseName] = useState([]);
 
@@ -31,15 +31,13 @@ const VerifyPost = ({ match, history }) => {
   } = userUpdate
  
   useEffect(() => {
-    
-    
+    //getWarehouse() 
   }, [ ])
 
   const submitHandler = (e) => {
-    verifypost()
+    e.preventDefault()
+    updateUser()
   }
-
-
   async function verifypost() {
   // const {data} ={ timer:timer}
     try {
@@ -55,7 +53,6 @@ const VerifyPost = ({ match, history }) => {
       console.error(error);
     }
   }
-
   return (
     <>
       <Link to='/bids' className='btn btn-light my-3'>
@@ -70,7 +67,7 @@ const VerifyPost = ({ match, history }) => {
         ) : error ? (
           <Message variant='danger'>{error}</Message>
         ) : (
-          <Form onSubmit={submitHandler}>
+          <Form onSubmit={verifypost}>
             <Form.Group controlId='name'>
               <Form.Label>End Time</Form.Label>
               <Form.Control
@@ -102,4 +99,4 @@ const VerifyPost = ({ match, history }) => {
   )
 }
 
-export default VerifyPost
+export default Vrp

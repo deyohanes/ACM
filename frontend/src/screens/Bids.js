@@ -17,7 +17,21 @@ const Bids = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+
+  const closeBId = (id) =>{
+    // const {data} ={ timer}
+    // if (window.confirm('Are you sure')) {
+      try {
+          axios.put(`/api/products/auction/close/${id}`);
+
+ 
+    } catch (error) {
+      console.error(error);
+   // }
+    }
+   }
   async function getWarehouse() {
+    
     try {
       const response = await axios.get("/api/products/auction/all");
       setwarehouseName(response.data);
@@ -32,29 +46,11 @@ const Bids = ({ history }) => {
 
   useEffect(() => {
     getWarehouse();
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listOrders());
-    } else {
-      history.push("/login");
-    }
-  }, [dispatch, history, userInfo]);
+   
+  }, []);
 
  
-  async function closeBId(timer) {
-    // const {data} ={ timer}
-     try {
-         const response = await axios.put("/api/products/auction/verify",timer);
-          //console.log(req.params)
-          
- 
- //        const response = await axios.get("/api/products/auction/byid",userInfo._id);
- 
-      // console.log(warehouseName);
   
-     } catch (error) {
-       console.error(error);
-     }
-   }
 
 
   return (
@@ -75,6 +71,7 @@ const Bids = ({ history }) => {
               <th>AMOUNT</th>
               <th>IsActive</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -89,14 +86,21 @@ const Bids = ({ history }) => {
                   {order.isLive ? (
                     <i class="fa fa-play" aria-hidden="green"></i>
                   ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                  <>
+                  {
+                    order.isPosted ?
+                     (<><i class="fa fa-spinner" aria-hidden="true"></i></>) : 
+                    (<><i className="fas fa-times" style={{ color: "red" }}></i></>)
+                  }
+                  </>
+                   //<i className="fas fa-times" style={{ color: "red" }}></i>
                   )}
                 </td>
 
                 <td>
                   {order.isLive ? (
                     <>
-                      <LinkContainer to={`/close/${order._id}`}>
+                      <LinkContainer >
                         <Button onClick={closeBId(order._id)} variant="Close" className="btn-sm">
                           Close
                         </Button>

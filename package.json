@@ -1,7 +1,7 @@
 {
   "name": "proshop",
   "version": "1.0.0",
-  "description": "MERN shopping cart app",
+  "description": "ACM",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -13,7 +13,7 @@
     "data:destroy": "node backend/seeder -d",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
-  "author": "Brad Traversy",
+  "author": "JObs",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -29,7 +29,8 @@
     "multer": "^1.4.2",
     "react-bootstrap": "^2.4.0",
     "react-countdown": "^2.3.2",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.4.0",
+    "react-select": "^5.3.2"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",

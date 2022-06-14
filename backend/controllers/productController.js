@@ -177,17 +177,20 @@ const getTopProducts = asyncHandler(async (req, res) => {
 ////new auction
 ////POST /api/products/auction
 const newAuction = asyncHandler(async (req, res) => {
-  const {  productId, baseprice,  amount } = req.body;
-  
-  /*
+  const {data}  = req.body;
+  const id = req.params.id
+  const baseprice = data.baseprice
+  const amount = data.amount
+  res.json(data.baseprice)
+   /*
   if (duration === null || duration === 0) duration = 300;
   if (duration > 10800) duration = 3600;
   //const timer = duration;
   */
  let bool = true
   try {
-    const product = await Product.findById(productId)
-   // res.json(product );
+    const product = await Product.findById(id)
+   //res.json(product );
     if(product){
       if(!product.isPosted){
         if(amount > product.countInStock){ res.status(201).json({message : "You Dont Have that much product"});}
@@ -205,7 +208,7 @@ const newAuction = asyncHandler(async (req, res) => {
           res.status(201).json({message : "Auction already Posted"});
         }
     }
- 
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
@@ -233,21 +236,7 @@ const newAuction = asyncHandler(async (req, res) => {
     //Create room for auction
      
     
-  const closeAuction = asyncHandler(async (req, res) => {
-      //const  { req.params.id }= req.body;
-    
-      const auction = await Product.findByIdAndUpdate(req.params.id)
-      if(auction) {
-        if(auction.isLive){
-          auction.isPosted = false
-          auction.isLive = false
-          auction.isEnd = true
-          await auction.save();
-          res.json(auction);
-        }
-      }
-      res.json(auction);
-    });
+  
 //////////
 //Get Auction By Id
 //////    /api/products/auction/:id
@@ -278,6 +267,7 @@ const getOwnAuction = asyncHandler(async (req, res) => {
 
 //////////////Get all auctions
 ////// /api/products/auction/all
+
 const getAuction = asyncHandler(async (req, res) => {
   const bids = await Product.find({});
   res.json(bids);
@@ -286,34 +276,34 @@ const getAuction = asyncHandler(async (req, res) => {
 /////////////////Verify auction
 //////  /api/products/auction/verify
 const verifybid = asyncHandler(async (req, res) => {
-  //const  {durations }  = req.body;
-  const id = req.params.id
-   res.json(typeof(id))
+  const  duration   = req.body;
+  // const id = req.body
+  //res.send(duration);
   
-  const duration = 450
-  //durations.duration
- /*
+  //const duration = 450
+  // //durations.duration
+ 
   if (duration === null || duration === 0) duration = 300;
   if (duration > 10800) duration = 3600;
   const timer = duration;
-  
-  const auction = await Product.findById(req.params.id);
-  //res.json(auction.isPosted);
-  if (auction) {
-    if(auction.isPosted){ 
-      auction.openAt = new Date();
-      auction.timer = timer;
-      auction.duration = duration;
-      auction.isLive = true;
-      await auction.save();
-      res.json(auction);
-    }
-    res.json({ message : "Auction Not Posted" });
+  const id = req.params.id
+  const auction = await Product.find({id});
+  res.json(auction);
+  // if (auction) {
+  //   if(auction.isPosted){ 
+  //     auction.openAt = new Date();
+  //     auction.timer = timer;
+  //     auction.duration = duration;
+  //     auction.isLive = true;
+  //     await auction.save();
+  //     res.json(auction);
+  //   }
+  //   res.json({ message : "Auction Not Posted" });
    
-  } else {
-    res.status(404);
-    throw new Error("Auction not found");
-  }*/
+  // } else {
+  //   res.status(404);
+  //   throw new Error("Yehone Error");
+  // }
 });
 
 /////////place bid
@@ -322,9 +312,9 @@ const verifybid = asyncHandler(async (req, res) => {
 const placebid = asyncHandler(async (req, res) => {
   const data = req.body
  // const u = data.pid  
-  const id = data.id 
-  const userId = data.userId
-  const price =data.price
+  // const id = data.id 
+  // const userId = data.userId
+  // const price =data.price
 
   
   const auction = await Product.findById(id);
@@ -408,6 +398,44 @@ const updatebid = asyncHandler(async (req, res, bidres, bidid) => {
     auction.numberOfbids = auction.bider.length;
   }
 });
+
+const getfilter = asyncHandler(async (req, res) => {
+  const {key,number} = req.body
+  let products;
+  switch (key) {
+    case "all":
+         products = await Product.find({}).sort({ rating: -1 }).limit(3);
+      break;
+    case "opened":
+          products = await Product.find({$isLive : true}).sort({ rating: -1 }).limit(3);
+      break;
+    case "closed":
+           products = await Product.find({$isClosed : true}).sort({ rating: -1 }).limit(3);
+     break;
+     
+  }
+  if(!products.length > 0 ){
+    products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  }
+res.json({products})
+  res.json(products);
+});
+
+const closeAuction = asyncHandler(async (req, res) => {
+  //const  { req.params.id }= req.body;
+
+  const auction = await Product.findByIdAndUpdate(req.params.id)
+  if(auction) {
+    if(auction.isLive){
+      auction.isPosted = false
+      auction.isLive = false
+      auction.isEnd = true
+      await auction.save();
+      res.json(auction);
+    }
+  }
+  res.json(auction);
+});
 export {
   getProducts,
   getOwnProducts,
@@ -417,6 +445,7 @@ export {
   updateProduct,
   createProductReview,
   getTopProducts,
+  getfilter,
   ///////auction
   newAuction,
   getAuctionById,

@@ -31,7 +31,7 @@ const ProduceProductsElement = ({detail}) => {
             <td>{detail.symbol}</td>
             <td>{detail.warehouseSymbol}</td>
             <td>
-            <LinkContainer to={`/postform/:${detail._id}`}>
+            <LinkContainer to={`/postform/${detail._id}`}>
                 <Button  
               //  {  postAuction(); }
             

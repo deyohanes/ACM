@@ -1,47 +1,69 @@
-import React, { useEffect,useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col } from 'react-bootstrap'
-import Product from '../components/Product'
-import Message from '../components/Message'
-import Loader from '../components/Loader'
-import Paginate from '../components/Paginate'
-import ProductCarousel from '../components/ProductCarousel'
-import Meta from '../components/Meta'
-import { listProducts } from '../actions/productActions'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Form,
+  Row,
+  Button,
+  Col,
+  Dropdown,
+  DropdownButton,
+  ListGroup,
+} from "react-bootstrap";
+import Product from "../components/Product";
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import Paginate from "../components/Paginate";
+import ProductCarousel from "../components/ProductCarousel";
+import Meta from "../components/Meta";
+import { listProducts,filterSearch } from "../actions/productActions";
  
 const HomeScreen = ({ match }) => {
-  const keyword = match.params.keyword
-  const [text ,setText] =useState("")
-  const pageNumber = match.params.pageNumber || 1
+  const keyword = match.params.keyword;
+   const pageNumber = match.params.pageNumber || 1;
+  const [level, setLevel] = useState("");
+  
+  const dispatch = useDispatch();
+  const [name, setName] = useState([]);
+  const productList = useSelector((state) => state.productList);
+  const { loading, error, products, page, pages } = productList;
 
-  const dispatch = useDispatch()
-
-  const productList = useSelector((state) => state.productList)
-  const { loading, error, products, page, pages } = productList
+ function filterSearch() {
+      dispatch(filterSearch({key:`opend`,pageNumber}))
+ }
 
   useEffect(() => {
-    dispatch(listProducts(keyword, pageNumber))
-     
-  }, [dispatch, keyword, pageNumber])
-
+     dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, keyword, pageNumber]);
+ 
+  function filterSearc() {}
   return (
-    <>{
-
-    }
+    <>
+      {}
       <Meta />
       {!keyword ? (
         <ProductCarousel />
       ) : (
-        <Link to='/' className='btn btn-light'>
+        <Link to="/" className="btn btn-light">
           Go Back
         </Link>
       )}
       <h1>Latest Products</h1>
+  <Row>
+    <Col>
+    
+    <Button  onClick={filterSearch} variant="Secondary" >All</Button>
+    <Button onClick={filterSearch}  variant="Secondary">Opened</Button>
+     <Button onClick={filterSearch}  variant="Secondary">Closed</Button>
+     </Col>
+    <Col> </Col>
+    <Col> </Col>
+  </Row>
+
       {loading ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>{error}</Message>
+        <Message variant="danger">{error}</Message>
       ) : (
         <>
           <Row>
@@ -54,12 +76,12 @@ const HomeScreen = ({ match }) => {
           <Paginate
             pages={pages}
             page={page}
-            keyword={keyword ? keyword : ''}
+            keyword={keyword ? keyword : ""}
           />
         </>
       )}
     </>
-  )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;

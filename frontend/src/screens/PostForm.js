@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
@@ -11,49 +12,41 @@ import { Row, Col,NavLink } from 'react-bootstrap';
 const PostForm = ({history}) => {
   const [baseprice, setPrice] = useState('')
   const [amount, setAmount] = useState('')
-  const [password, setPassword] = useState('')
-  const [region, setRegion] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+   
   const [message, setMessage] = useState(null)
 
-  const dispatch = useDispatch();
-
+ 
   const userList = useSelector((state) => state.userList);
   const { loading, error } = userList;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const userDelete = useSelector((state) => state.userDelete);
-  const { success: successDelete } = userDelete;
+   const id = useParams();
+  const pid = id.id
+  console.log(pid)
 
- const postAuction = () => async (dispatch) => {
-    try {
-     
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-  
-      const { data } = await axios.put(
-        '/api/products/auction',
-        {  amount ,baseprice },
-        config
-      )
-       console.log.apply(data)
-      
-    } catch (error) {
-      
+  async function postAuction() {
+    
+    const {data} = {
+      baseprice : baseprice,
+      amount : amount
     }
+  try {
+    
+    console.log(pid);
+    const response = await axios.put(`/api/products/auction/${pid}`, data );
+    const warehouseName = response.data;
+    console.log.apply(warehouseName)
+    
+  } catch (error) {
+    console.error(error);
+  } 
+  
   }
 
    useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-        history.push("/login");
-    } else {
-     
-    }
-  }, [dispatch, history, successDelete, userInfo]);
+   
+  }, []);
 
 
   return (
@@ -85,7 +78,7 @@ const PostForm = ({history}) => {
           <Form.Label>Amount</Form.Label>
           <Form.Control
             type='number'
-            placeholder='Enter email'
+            placeholder='Enter An amount to be posted'
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           ></Form.Control>
