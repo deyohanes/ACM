@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
@@ -12,7 +12,7 @@ import { listProducts } from '../actions/productActions'
  
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword
-
+  const [text ,setText] =useState("")
   const pageNumber = match.params.pageNumber || 1
 
   const dispatch = useDispatch()
