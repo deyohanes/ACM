@@ -1,62 +1,55 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  Form,
-  Button,
-
-} from "react-bootstrap";
+import { Form, Button,Row,Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 
 const Warehouse = ({ match, history }) => {
   const [region, setRegion] = useState("");
   const [name, setName] = useState([]);
   const [size, setSize] = useState("");
- 
- 
+
   async function setCommodity() {
     try {
-        await axios({
-            method: 'post',
-            url: '/api/warehouse',
-            data: {
-              warehouseSymbol: name,
-                region:region,
-                size:parseInt(size),
-               
-            }
-          });
+      await axios({
+        method: "post",
+        url: "/api/warehouse",
+        data: {
+          warehouseSymbol: name,
+          region: region,
+          size: parseInt(size),
+        },
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
- 
+  useEffect(() => {}, []);
 
-  useEffect(() => {
-   
-  }, []);
-
- 
   const submitHandler = (e) => {
     e.preventDefault();
     //const id = getid(email)
-    setCommodity()
-
-
+    setCommodity();
+  
   };
 
   return (
     <>
-      <Link to="/admin/productlist" className="btn btn-light my-3">
+      <Row>
+        <Col> <Link to="/admin/productlist" className="btn btn-light my-3">
         Go Back
-      </Link>
+      </Link></Col>
+        <Col><Link to="/admin/warehouselist" className="btn btn-light my-3">
+        All warehouses
+      </Link> </Col>
+      </Row>
+      
       <FormContainer>
         <h1>Add Warehouse</h1>
 
-
         <Form onSubmit={submitHandler}>
-        <Form.Group controlId="brand">
+          <Form.Group controlId="brand">
             <Form.Label>Warehouse name</Form.Label>
             <Form.Control
               type="text"
@@ -86,13 +79,10 @@ const Warehouse = ({ match, history }) => {
             ></Form.Control>
           </Form.Group>
 
-        <Button type='submit' variant='primary'>
-         ADD
-        </Button>
-      </Form>
-
-
-    
+          <Button type="submit" variant="primary">
+            ADD
+          </Button>
+        </Form>
       </FormContainer>
     </>
   );

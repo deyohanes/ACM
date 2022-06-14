@@ -1,13 +1,14 @@
 import React, { useEffect,useState } from "react";
 import { axios } from 'axios';
 import { FaSearch , FaShareAlt } from "react-icons/fa";
-import { LinkContainer } from 'react-router-bootstrap'
+import { LinkContainer  } from 'react-router-bootstrap'
 import {   Table,
     Button,
     Row,
     Col,
     InputGroup,
     FormControl,
+    Modal , FormLabel,
     Form, } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
@@ -19,8 +20,15 @@ import {
   createProduct,
 } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
+import ProduceProductsElement from '../components/ProduceProductsElement';
 
 const Producerproducts = ({ history, match }) => {
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+const [modalShow, setModalShow] = React.useState(false)
   const pageNumber = match.params.pageNumber || 1
   const [email, setEmail] = useState('')
   const dispatch = useDispatch()
@@ -45,7 +53,7 @@ const Producerproducts = ({ history, match }) => {
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
-
+/*
 
   async function getProducts() {
    
@@ -70,6 +78,7 @@ const Producerproducts = ({ history, match }) => {
       console.error(error);
     }
   }
+  */
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -96,7 +105,7 @@ const Producerproducts = ({ history, match }) => {
 };
  
   useEffect(() => {
-    getProducts()
+    //getProducts()
     if (!userInfo ) {
       history.push('/login')
       
@@ -180,27 +189,14 @@ const Producerproducts = ({ history, match }) => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>${product.countInStock}</td>
-                  <td>{product.symbol}</td>
-                  <td>{product.warehouse}</td>
-                  <td>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button  onClick={() => deleteHandler(product._id)}variant='light' className='btn-sm'>
-                      <FaShareAlt/>POST
-                      </Button>
-                    </LinkContainer>
-                  </td>
-                </tr>
-              ))}
+              {products.map((product) => <ProduceProductsElement detail={product} key={product._id}/>)
+              }
             </tbody>
           </Table>
           <Paginate pages={pages} page={page} isAdmin={true} />
         </>
       )}
+ 
     </>
   )
 }

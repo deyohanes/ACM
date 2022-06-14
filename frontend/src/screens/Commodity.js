@@ -56,9 +56,8 @@ const Commodity = ({ match, history }) => {
       </Link>
       <FormContainer>
         <h1>Add Commodity</h1>
-
-
-        <Form onSubmit={submitHandler}>
+ <Form onSubmit={submitHandler}>
+  
         <Form.Group controlId="brand">
             <Form.Label>Commodity</Form.Label>
             <Form.Control

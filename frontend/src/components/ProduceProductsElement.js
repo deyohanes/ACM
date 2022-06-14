@@ -4,10 +4,11 @@ import {
     Button,} from 'react-bootstrap'
 
 import React from "react";
-import PostForm from './PostForm';
+ import PostForm from '../screens/PostForm';
 
 
 const ProduceProductsElement = ({detail}) => {
+    const [modalShow, setModalShow] = React.useState(false);
 
     const postAuction = async () => {
     //     const pid = product._id
@@ -30,10 +31,8 @@ const ProduceProductsElement = ({detail}) => {
             <td>{detail.symbol}</td>
             <td>{detail.warehouseSymbol}</td>
             <td>
-            <LinkContainer to={`/producerproducts`}>
-                <Button  onClick = {() =>
-               <PostForm detail={product}/>
-            }
+            <LinkContainer to={`/postform/:${detail._id}`}>
+                <Button  
               //  {  postAuction(); }
             
                 variant='light' className='btn-sm'>

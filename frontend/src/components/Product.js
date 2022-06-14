@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from 'react-bootstrap'
-import Rating from './Rating'
+import Rate from './Rate'
+
 import { Button } from 'react-bootstrap';
 
 const Product = ({ product }) => {
@@ -19,14 +20,21 @@ const Product = ({ product }) => {
         </Link>
 
         <Card.Text as='div'>
-          <Rating
-            value={product.rating}
-            text={`${product.numReviews} reviews`}
+          <Rate
+           
+            text={`${product.description}`}
+            
           />
         </Card.Text>
 
-        <Card.Text as='h3'>{product.price}ETB
-        <Button disabled variant="success">Open</Button></Card.Text>
+        <Card.Text as='h3'>
+            <>{ }
+            </>
+          {product.currentPrice}ETB
+        {
+          product.isLive ? (<> <Button  variant="success">Open</Button></>) : (<>  <Button disabled variant="danger">Not Started</Button></>)
+        }
+   </Card.Text>
       </Card.Body>
     </Card>
   )

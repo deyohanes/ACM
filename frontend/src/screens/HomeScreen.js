@@ -9,7 +9,7 @@ import Paginate from '../components/Paginate'
 import ProductCarousel from '../components/ProductCarousel'
 import Meta from '../components/Meta'
 import { listProducts } from '../actions/productActions'
-
+ 
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword
 
@@ -22,11 +22,12 @@ const HomeScreen = ({ match }) => {
 
   useEffect(() => {
     dispatch(listProducts(keyword, pageNumber))
+     
   }, [dispatch, keyword, pageNumber])
 
   return (
     <>{
-      
+
     }
       <Meta />
       {!keyword ? (

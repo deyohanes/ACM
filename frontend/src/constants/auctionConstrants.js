@@ -1,0 +1,3 @@
+export const GET_REQUEST = 'GET_REQUEST'
+export const AUCTION_SUCCESS = 'GET_SUCCESS'
+ 

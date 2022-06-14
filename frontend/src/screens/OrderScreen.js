@@ -114,11 +114,11 @@ console.log(JSON.stringify)
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Name: </strong> {order.user.name}
+                <strong>Name: </strong> {order.isPaid }
               </p>
               <p>
                 <strong>Email: </strong>{' '}
-                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+                <a href={`mailto:${order.user }`}>{order.paymentMethod }</a>
               </p>
               <p>
                 <strong>Address:</strong>

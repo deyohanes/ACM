@@ -33,7 +33,7 @@ const productSchema = mongoose.Schema(
     },
     brand: {
       type: String,
-      required: true,
+       
     },
     category: {
       type: String,
@@ -64,6 +64,86 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    isPosted : {
+      type : Boolean,
+      required : true,
+      default : false
+    },
+    currentPrice : {
+      type :Number,
+     required: true,
+     default : 0
+   },
+   baseprice:{
+    type :Number,
+    required: true,
+    default : 0
+  } ,
+  amount: {
+    type :Number,
+    required : true,
+    default: 0,
+  },
+  timer: {
+    type: Number,
+    default: 300,
+  },
+  duration: {
+    type: Number,
+    default: 300,
+  },
+  isLive: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  isEnd: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  numberOfbids : {
+    type : Number,
+    required : true,
+    default :0
+  },
+
+  openAt :{
+    type : Date,
+      
+   },
+   closeAt : { 
+     type : Date
+     
+   },
+   purchasedBy: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'user',
+   },
+    currentBidder: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'user',
+   },
+   room: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'room',
+   },
+   bids: [
+    {
+      user: {
+        type: String,     
+        required: true,
+      },
+      amount: {
+        type: Number,
+        required: true,
+      },
+      time: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   },
   {
     timestamps: true,

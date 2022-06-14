@@ -21,7 +21,7 @@ const Commoditylist = ({ history, match }) => {
     try {
       const response = await axios.get("/api/commodity");
       const name = response.data;
-      console.log(name);
+      console.log(name );
       setCommudityName(name);
     //  setSymbol(name.symbol)
     } catch (error) {
@@ -101,7 +101,7 @@ const Commoditylist = ({ history, match }) => {
                   <td>{commodityName.orgin}</td>
                   <td>{commodityName.market}</td>
                   <td>
-                    <LinkContainer to={`/admin/warehouse/${data._id}/edit`}>
+                    <LinkContainer to={`/admin/commodity`}>
                       <Button variant='light' className='btn-sm'>
                         <i className='fas fa-edit'></i>
                       </Button>

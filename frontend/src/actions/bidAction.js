@@ -24,7 +24,8 @@ import {
 } from '../constants/productConstants'
 import { logout } from './userActions'
 
-export const listProducts = (keyword = '', pageNumber = '') => async (
+
+export const listPosts = (keyword = '', pageNumber = '') => async (
   dispatch
 ) => {
   try {
@@ -49,11 +50,11 @@ export const listProducts = (keyword = '', pageNumber = '') => async (
   }
 }
 
-export const listProductDetails = (id) => async (dispatch) => {
+export const listbiddetail = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST })
 
-    const { data } = await axios.get(`/api/products/${id}`)
+    const { data } = await axios.get(`/auction/byid/${id}`)
 
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
@@ -106,12 +107,12 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   }
 }
 
-export const createProduct = () => async (dispatch, getState) => {
+export const createPost = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: PRODUCT_CREATE_REQUEST,
     })
-
+    userInfo.role === "producer"
     const {
       userLogin: { userInfo },
     } = getState()
@@ -278,54 +279,6 @@ export const listTopProducts = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_TOP_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
-  }
-}
- 
-
-export const biding = (datas) => async (dispatch) => {
-   try {
- 
-    dispatch({ type: PRODUCT_TOP_REQUEST })
-     const data = await axios.post(
-      `/api/products/auction/placebid`,
-       datas
-    )
-    dispatch({
-      type: PRODUCT_TOP_SUCCESS,
-      payload: data,
-    })
-    console.log(data)
-   } catch (error) {
-    
-   }
-}
-
-export const verifybid = (timer) => async (dispatch) => {
-  try {
-    
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-
-     const { data } = await axios.put(
-      '/auction/verify',
-      {timer},
-     
-    )
- 
-
-   // localStorage.setItem('userInfo', JSON.stringify(data))
-  } catch (error) {
-    dispatch({
-      //type: USER_REGISTER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

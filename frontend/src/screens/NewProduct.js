@@ -7,14 +7,14 @@ import {
   Col,
   Row,
   ListGroup,
-  ListGroupItem,
+  //ListGroupItem,
 } from "react-bootstrap";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { updateProduct } from "../actions/productActions";
+//import { updateProduct } from "../actions/productActions";
 
 const NewProduct = ({ match, history }) => {
-  const productId = match.params.id;
+  //const productId = match.params.id;
   const [commudity, setCommudity] = useState("");
   const [warehouse, setWarehouse] = useState("");
   const [description, setDescription] = useState("");
@@ -30,8 +30,8 @@ const NewProduct = ({ match, history }) => {
   
   const [level, setLevel] = useState("");
   const [market, setMarket] = useState("");
-  const [producerid, setProducerid] = useState("");
-  const [levels] = [1, 2, 3, 4, 5];
+  //const [producerid, setProducerid] = useState("");
+ // const [levels] = [1, 2, 3, 4, 5];
 
   async function getCommudity() {
     try {
@@ -44,16 +44,17 @@ const NewProduct = ({ match, history }) => {
       console.error(error);
     }
   }
-
+/*
   async function getid(email) {
     try {
       const response = await axios.get("/api/users/ider", email);
       const name = response.data._id;
-      setProducerid(name);
+      setProducer(name);
     } catch (error) {
       console.error(error);
     }
   }
+  */
 
   async function getWarehouse() {
     try {

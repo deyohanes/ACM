@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +32,7 @@ const ProductScreen = ({ history, match }) => {
   const [comment, setComment] = useState("");
   //const [products, setProduct] = useState();
   const [bidprice, setbidPrice] = useState("");
-
+  const [timer, setTimer] = useState('00:00:00');
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
@@ -48,55 +48,104 @@ const ProductScreen = ({ history, match }) => {
     loading: loadingProductReview,
     error: errorProductReview,
   } = productReviewCreate;
+    const Ref = useRef(null);
+  
+    async function bidngHandler() {
+      
+      // console.log(product._id,bidprice)
+         //      const id = product._id
+         // const  userId = userInfo._id
+         //   const price =  bidprice
+         const pid = product._id
+         const uid = userInfo._id
+         const bd = parseInt(bidprice)
+        // const a=  bd.toString()
+        // console.log(typeof(a))
+       const  data = {
+         "id": pid,
+         "userId": uid,
+         "price": bd
+         }
+       await axios.post("/api/products/auction/placebid",data)
+     //  await axios.post("/api/products/auction/placebid",null)
+     //biding(product._id,userInfo._id,bidprice)
+   
+       
+         //   const id = product._id
+         //const  userId = userInfo._id
+           //const price =  bidprice
+       
+       //await axios.post("/api/products/auction/placebid",id,userId,price)
+      
+       }
+       
+       
+          /*
+     try {
+       const price = parseInt(bidprice)
+       const id = product._id;
+       const userId = userInfo._id;
+        console.log(userId)
+       const response = await axios.put("/api/products/auction/placebid",id,userId,price)
+       const bidsuccess = response.data;
+       console.log(bidsuccess);
+     } catch (error) {
+       console.error(error);
+     }
+  
+ */
+   
 
-  
-   async function bidngHandler() {
-     // console.log(product._id,bidprice)
-        //      const id = product._id
-        // const  userId = userInfo._id
-        //   const price =  bidprice
-        const pid = product._id
-        const uid = userInfo._id
-        const bd = parseInt(bidprice)
-        const a=  bd.toString()
-        console.log(typeof(a))
-      const  {data} = {
-        "id": pid,
-        "userId": uid,
-        "price": bd
-        }
-      await axios.post("/api/products/auction/placebid",data)
-      await axios.post("/api/products/auction/placebid",null,{params})
-    //biding(product._id,userInfo._id,bidprice)
-  
-      
-        //   const id = product._id
-        //const  userId = userInfo._id
-          //const price =  bidprice
-      
-      //await axios.post("/api/products/auction/placebid",id,userId,price)
-     
-      }
-      
-      
-         /*
-    try {
-      const price = parseInt(bidprice)
-      const id = product._id;
-      const userId = userInfo._id;
-       console.log(userId)
-      const response = await axios.put("/api/products/auction/placebid",id,userId,price)
-      const bidsuccess = response.data;
-      console.log(bidsuccess);
-    } catch (error) {
-      console.error(error);
-    }
+
+
+
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+    return {
+        total, hours, minutes, seconds
+    };
+}
+
+const startTimer = (e) => {
+  let { total, hours, minutes, seconds } 
+              = getTimeRemaining(e);
+  if (total >= 0) {
+    minutes = product.timer /60
+      setTimer(
+          (hours > 10 ? hours : '0' + hours) + ':' +
+          (minutes > 9 ? minutes : '' + minutes) + ':'
+          + (seconds > 9 ? seconds : '0' + seconds)
+      )
+  }
+}
+const clearTimer = (e) => {
+   
+  setTimer('00:00:00');
  
-*/
-  
+  if (Ref.current) clearInterval(Ref.current);
+  const id = setInterval(() => {
+      startTimer(e);
+  }, 1000)
+  Ref.current = id;
+}
+
+const getDeadTime = () => {
+  let deadline = new Date();
+
+  // This is where you need to adjust if 
+  // you entend to add more time
+  deadline.setSeconds(deadline.getSeconds() + 10);
+  return deadline;
+}
+
 
 
 useEffect(() => {
+  clearTimer(getDeadTime());
     if (successProductReview) {
       setRating(0);
       setComment("");
@@ -114,7 +163,7 @@ useEffect(() => {
     //history.push(`/cart/${match.params.id}?qty=${qty}`);
   };
 */
-  const submitHandler = (e) => {
+   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
       createProductReview(match.params.id, {
@@ -123,7 +172,9 @@ useEffect(() => {
       })
     );
   };
-
+  const onClickReset = () => {
+    clearTimer(getDeadTime());
+}
   return (
     <>
       {userInfo ? (
@@ -205,10 +256,14 @@ useEffect(() => {
                           <ListGroup.Item>
                             <Row>
                               <Col>Status:</Col>
-                              <Col>
-                                Ends In:{" "}
-                                <Countdown date={5000 - product.timer} />,
-                              </Col>
+                              {
+                                product.isLive ? (<> <Col>
+                                  Ends In: <h2>{timer}</h2>
+                                 
+                                </Col></>) : (<> <Col>
+                              </Col></>)
+                              }
+                             
                               <Col>
                                 {product.isLive
                                   ? "Auction is Started"
@@ -229,14 +284,18 @@ useEffect(() => {
                           )}
 
                           <ListGroup.Item>
-                            <Button
-                              onClick={bidngHandler}
-                              className="btn-block"
-                              type="button"
-                              disabled={!product.isLive }
-                            >
-                              Bid
-                            </Button>
+                            {
+                                <Button
+                                onClick={bidngHandler}
+                              
+                                className="btn-block"
+                                type="button"
+                                disabled={!product.isLive  ||   ( product.currentPrice > bidprice) }
+                              >
+                                Bid
+                              </Button> 
+                            }
+                           
                           </ListGroup.Item>
                         </ListGroup>
                       </Card>

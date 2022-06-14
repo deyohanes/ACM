@@ -9,7 +9,7 @@ import { Form } from 'react-bootstrap';
 
 const Warehouselist = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1
-  const [warehouse, setWarehouse] = useState([]);
+  const [warehouse, setWarehouse] = useState();
   const [email, setEmail] = useState("");
 
  
@@ -17,30 +17,24 @@ const Warehouselist = ({ history, match }) => {
   const { userInfo } = userLogin
 
 
-  async function getWarehouse() {
-    try {
-      const response = await axios.get("/api/warehouse");
-      const warehouseName = response.data;
-      console.log(warehouseName);
-      setWarehouse(warehouseName);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
 
   useEffect(() => {
-    getWarehouse()
+    async function getWarehouse() {
+      try {
+        const response = await axios.get("/api/warehouse");
+        const warehouseName = response.data;
+        console.log(warehouseName);
+        setWarehouse(warehouseName);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
    
   }, [
    
   ])
-
- 
-
-
-
- 
 
   return (
     <>

@@ -17,7 +17,10 @@ const Header = () => {
   }
 
   return (
-    <header>
+    <>
+    {userInfo ?
+     (<>
+      <header>
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
         <Container>
           <LinkContainer to='/'>
@@ -28,21 +31,42 @@ const Header = () => {
             <Route render={({ history }) => <SearchBox history={history} />} />
            
             <Nav className='ml-auto'>
-              <LinkContainer to='/cart'>
+            {userInfo.isAdmin || (userInfo.role ==="producer") ?
+                  (<>
+                   
+                  </>):(<>
+                    <LinkContainer to='/cart'>
                 <Nav.Link>
                   <i className='fas fa-shopping-cart'></i> Cart
                 </Nav.Link>
               </LinkContainer>
+                  </>)}
+            
              
             
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id='username'>
-                  <LinkContainer to='/profile'>
+                 
+                  {userInfo.role == "producer" ?
+                  (<>
+                   <LinkContainer to='/profile'>
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
+                   <LinkContainer to="/producerproducts">
+                    <NavDropdown.Item>Own Products</NavDropdown.Item>
+                  </LinkContainer>
+                  </>):(<>
+                    <LinkContainer to='/profile'>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/orderlist'>
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                  </>)}
                   <NavDropdown.Item onClick={logoutHandler}>
                     Logout
                   </NavDropdown.Item>
+                 
                 </NavDropdown>
               ) : (
                 <LinkContainer to='/login'>
@@ -56,19 +80,74 @@ const Header = () => {
                   <LinkContainer to='/admin/userlist'>
                     <NavDropdown.Item>Users</NavDropdown.Item>
                   </LinkContainer>
-                  <LinkContainer to='/admin/productlist'>
+           
+                  {userInfo.role === "admin" ?
+                  (<>
+                   <LinkContainer to="/admin/commodity">
+                    <NavDropdown.Item>services</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/warehouse">
+                   <NavDropdown.Item>warehouses</NavDropdown.Item>
+                 </LinkContainer>
+                 <LinkContainer to="/bids">
+                   <NavDropdown.Item>Verify Post</NavDropdown.Item>
+                 </LinkContainer>
+                  </>):(<>
+                    <LinkContainer to='/admin/productlist'>
                     <NavDropdown.Item>Products</NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to='/admin/orderlist'>
                     <NavDropdown.Item>Orders</NavDropdown.Item>
                   </LinkContainer>
+                  </>)}
+                
                 </NavDropdown>
+                
               )}
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+    </header></>)
+    :
+    (
+    <>
+
+    <header>
+      <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
+        <Container>
+          <LinkContainer to='/'>
+            <Navbar.Brand>Agriculture Commodity Market </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <Route render={({ history }) => <SearchBox history={history} />} />
+            <Nav className='ml-auto'>
+              
+                
+             
+                <LinkContainer to='/login'>
+                  <Nav.Link>
+                  <i class="fa-regular fa-message"></i>
+                  </Nav.Link>
+                </LinkContainer>
+                <LinkContainer to='/login'>
+                  <Nav.Link>
+                    <i className='fas fa-user'></i> Sign In
+                  </Nav.Link>
+                </LinkContainer>
+               
+           
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </header>
+    </>
+ 
+    )}
+    </>
+   
   )
 }
 

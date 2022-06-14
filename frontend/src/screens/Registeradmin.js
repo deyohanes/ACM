@@ -5,6 +5,7 @@ import FormContainer from '../components/FormContainer'
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import axios from "axios";
+import { Row, Col,NavLink } from 'react-bootstrap';
 
 
 const Registeradmin = ({  history }) => {
@@ -72,7 +73,16 @@ const Registeradmin = ({  history }) => {
 
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
+      <Row>
+      <Col>  
+      <h1>Register Admin</h1>
+      
+      </Col>
+        <Col> <NavLink to="/admin/userlist" className="btn btn-light my-3">
+        Go Back
+      </NavLink></Col>
+      </Row>
+     
       {message && <Message variant='danger'>{message}</Message>}
       {error && <Message variant='danger'>{error}</Message>}
       {loading && <Loader />}
