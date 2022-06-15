@@ -16,21 +16,29 @@ import {
   getOwnAuction,
   getAuctionById,
   closeAuction,
-  getfilter
+  getfilter,
+   
+  ownproducts
+
 } from '../controllers/productController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
-router.put('/auction/:id',newAuction)
+router.post('/auction/:id',newAuction)
 router.route('/').get(getProducts).post(protect, admin, createProduct)
 router.route('/:id/reviews').post(protect, createProductReview)
 router.get('/top', getTopProducts)
 router.get('/own', getOwnProducts)
 router.get('/auction/all', getAuction)
+router.get('/products/own', ownproducts)
+
+
 router.get('/filter', getfilter)
 router.get('/auction/byid', getAuctionById)
 router.put('/auction/close/:id', closeAuction)
-router.get('/auction/own', getOwnAuction)
+router.get('/auction/own/:id', getOwnAuction)
+router.get('/products/own/:id', getOwnProducts)
+
 router.put('/auction/verify/:id',verifybid)
-router.post('/auction/placebid',placebid)
+router.post('/auction/placebid/:id',placebid)
 
 router
   .route('/:id')

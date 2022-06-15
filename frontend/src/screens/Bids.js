@@ -6,6 +6,9 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listOrders } from "../actions/orderActions";
 import axios from "axios";
+//import { closeBids } from "../actions/productActions";
+import SingleBid from "../components/SingleBid";
+
 
 const Bids = ({ history }) => {
   const dispatch = useDispatch();
@@ -17,27 +20,14 @@ const Bids = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-
-  const closeBId = (id) =>{
-    // const {data} ={ timer}
-    // if (window.confirm('Are you sure')) {
-      try {
-          axios.put(`/api/products/auction/close/${id}`);
-
- 
-    } catch (error) {
-      console.error(error);
-   // }
-    }
-   }
+   
+  
   async function getWarehouse() {
-    
     try {
       const response = await axios.get("/api/products/auction/all");
+     // console.log(response);
       setwarehouseName(response.data);
-
       //        const response = await axios.get("/api/products/auction/byid",userInfo._id);
-
       // console.log(warehouseName);
     } catch (error) {
       console.error(error);
@@ -50,7 +40,18 @@ const Bids = ({ history }) => {
   }, []);
 
  
-  
+  // const closeBId = (id) =>{
+  //   // const {data} ={ timer}
+  //   // if (window.confirm('Are you sure')) {
+  //     try {
+  //         axios.put(`/api/products/auction/close/${id}`);
+
+ 
+  //   } catch (error) {
+  //     console.error(error);
+  //  // }
+  //   }
+  //  }
 
 
   return (
@@ -67,6 +68,7 @@ const Bids = ({ history }) => {
               <th>ID</th>
               <th>PRODUCT NAME</th>
               <th>PRODUCER</th>
+              <th>Lastest</th>
               <th>BASEPRCE</th>
               <th>AMOUNT</th>
               <th>IsActive</th>
@@ -74,51 +76,11 @@ const Bids = ({ history }) => {
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            {warehouseName.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>{order.name}</td>
-                <td>{order.user}</td>
-                <td>{order.baseprice}ETB</td>
-                <td>{order.amount}</td>
-                <td>
-                  {order.isLive ? (
-                    <i class="fa fa-play" aria-hidden="green"></i>
-                  ) : (
-                  <>
-                  {
-                    order.isPosted ?
-                     (<><i class="fa fa-spinner" aria-hidden="true"></i></>) : 
-                    (<><i className="fas fa-times" style={{ color: "red" }}></i></>)
-                  }
-                  </>
-                   //<i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
-                </td>
-
-                <td>
-                  {order.isLive ? (
-                    <>
-                      <LinkContainer >
-                        <Button onClick={closeBId(order._id)} variant="Close" className="btn-sm">
-                          Close
-                        </Button>
-                      </LinkContainer>
-                    </>
-                  ) : (
-                    <>
-                      <LinkContainer to={`/verifypost/${order._id}`}>
-                        <Button variant="light" className="btn-sm">
-                          verify
-                        </Button>
-                      </LinkContainer>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {
+            warehouseName.map(order => (
+              <SingleBid key={order._id} order={order} />
+            ))
+          }
         </Table>
       )}
     </>

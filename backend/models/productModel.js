@@ -85,12 +85,10 @@ const productSchema = mongoose.Schema(
     default: 0,
   },
   timer: {
-    type: Number,
-    default: 300,
+    type: Date,
   },
   duration: {
-    type: Number,
-    default: 300,
+    type: Date,
   },
   isLive: {
     type: Boolean,
@@ -121,8 +119,8 @@ const productSchema = mongoose.Schema(
      ref: 'user',
    },
     currentBidder: {
-     type: mongoose.Schema.Types.ObjectId,
-     ref: 'user',
+     type: String,
+    // ref: 'user',
    },
    room: {
      type: mongoose.Schema.Types.ObjectId,

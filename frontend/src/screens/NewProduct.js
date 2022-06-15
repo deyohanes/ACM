@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-//import { updateProduct } from "../actions/productActions";
+ //import { updateProduct } from "../actions/productActions";
 
 const NewProduct = ({ match, history }) => {
   //const productId = match.params.id;
@@ -129,6 +129,7 @@ addproduct()
       <Link to="/admin/productlist" className="btn btn-light my-3">
         Go Back
       </Link>
+     
       <FormContainer>
         <h1>Add Product</h1>
 

@@ -177,11 +177,15 @@ const getTopProducts = asyncHandler(async (req, res) => {
 ////new auction
 ////POST /api/products/auction
 const newAuction = asyncHandler(async (req, res) => {
-  const {data}  = req.body;
+  const data  = req.body;
   const id = req.params.id
+
+  console.log(data);
+
+   // res.json(product)
+
   const baseprice = data.baseprice
   const amount = data.amount
-  res.json(data.baseprice)
    /*
   if (duration === null || duration === 0) duration = 300;
   if (duration > 10800) duration = 3600;
@@ -252,9 +256,12 @@ const getAuctionById = asyncHandler(async (req, res) => {
 //////// Get Own Auction
 ////   /api/auction/own
 const getOwnAuction = asyncHandler(async (req, res) => {
-  const { producerId } = req.body;
-
-  const auction = await Product.find({ producerId });
+  const  producerId  = req.body;
+  // const id = producerId.producerId
+//res.send(producerId)
+  //const auction = await Product.find(id );
+  const {id} = req.params.id
+  const auction = await Product.find(id) 
 
   if (auction) {
     res.status(201).json(auction);
@@ -263,6 +270,23 @@ const getOwnAuction = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 });
+//////////////
+const getOwnAuctionfromprofile = asyncHandler(async (req, res) => {
+  const  producerId  = req.body;
+  // const id = producerId.producerId
+//res.send(producerId)
+  //const auction = await Product.find(id );
+  const {id} = req.params.id
+  const auction = await Product.find(id) 
+  if (auction) {
+    res.status(201).json(auction);
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+/////////////
+
 
 
 //////////////Get all auctions
@@ -276,48 +300,52 @@ const getAuction = asyncHandler(async (req, res) => {
 /////////////////Verify auction
 //////  /api/products/auction/verify
 const verifybid = asyncHandler(async (req, res) => {
-  const  duration   = req.body;
+  const  {duration}   = req.body;
+  console.log('duration', duration);
   // const id = req.body
   //res.send(duration);
   
   //const duration = 450
   // //durations.duration
  
-  if (duration === null || duration === 0) duration = 300;
-  if (duration > 10800) duration = 3600;
   const timer = duration;
   const id = req.params.id
-  const auction = await Product.find({id});
-  res.json(auction);
-  // if (auction) {
-  //   if(auction.isPosted){ 
-  //     auction.openAt = new Date();
-  //     auction.timer = timer;
-  //     auction.duration = duration;
-  //     auction.isLive = true;
-  //     await auction.save();
-  //     res.json(auction);
-  //   }
-  //   res.json({ message : "Auction Not Posted" });
+  const auction = await Product.findById(id);
+  //res.json(auction);
+
+  if (auction) {
+    if(auction.isPosted){ 
+      auction.openAt = new Date();
+      auction.timer = timer;
+      auction.duration = duration;
+      auction.isLive = true;
+      auction.isEnd = false;
+      await auction.save();
+
+      return res.json(auction);
+    }
+    return res.json({ message : "Auction Not Posted" });
    
-  // } else {
-  //   res.status(404);
-  //   throw new Error("Yehone Error");
-  // }
+  } else {
+    res.status(404);
+    throw new Error("Yehone Error");
+  }
 });
 
 /////////place bid
 ///   /api/products/auction/placebid
 
 const placebid = asyncHandler(async (req, res) => {
-  const data = req.body
- // const u = data.pid  
-  // const id = data.id 
-  // const userId = data.userId
-  // const price =data.price
-
+const {userId ,price} = req.body
+ 
+ //res.json(req.params.id)
+//   const id = u.id 
+//   const userId = data.userId
+//   const price =data.price
+// res.send(u)
   
-  const auction = await Product.findById(id);
+   const auction = await Product.findById(req.params.id);
+ 
   
    if (auction) 
       {
@@ -400,17 +428,18 @@ const updatebid = asyncHandler(async (req, res, bidres, bidid) => {
 });
 
 const getfilter = asyncHandler(async (req, res) => {
-  const {key,number} = req.body
+  const {keyword,pageNumber} = req.query
+
   let products;
-  switch (key) {
+  switch (keyword) {
     case "all":
-         products = await Product.find({}).sort({ rating: -1 }).limit(3);
+         products = await Product.find({}).sort({ rating: -1 });
       break;
     case "opened":
-          products = await Product.find({$isLive : true}).sort({ rating: -1 }).limit(3);
+          products = await Product.find({isLive : true}).sort({ rating: -1 });
       break;
     case "closed":
-           products = await Product.find({$isClosed : true}).sort({ rating: -1 }).limit(3);
+           products = await Product.find({isClosed : true}).sort({ rating: -1 });
      break;
      
   }
@@ -422,19 +451,36 @@ res.json({products})
 });
 
 const closeAuction = asyncHandler(async (req, res) => {
-  //const  { req.params.id }= req.body;
+  const {id} = req.params ;
+  // res.json(a)
+//res.json(id)
 
-  const auction = await Product.findByIdAndUpdate(req.params.id)
+  const auction = await Product.findById(id)
+  console.log('auction', auction);
   if(auction) {
     if(auction.isLive){
       auction.isPosted = false
       auction.isLive = false
       auction.isEnd = true
+      auction.purchasedBy = req.params.id
+      auction.currentBidder = req.params.id
       await auction.save();
-      res.json(auction);
+      return res.json(auction);
     }
+    return res.json({"mesage" : "already ended"})
   }
-  res.json(auction);
+});
+
+
+
+
+const ownproducts = asyncHandler(async (req, res) => {
+ 
+  // res.json(id)
+//res.json(id)
+const {id} = req.params.id
+  const auction = await Product.findById(id)
+ res.json(auction);
 });
 export {
   getProducts,
@@ -446,6 +492,7 @@ export {
   createProductReview,
   getTopProducts,
   getfilter,
+  ownproducts,
   ///////auction
   newAuction,
   getAuctionById,
@@ -454,5 +501,6 @@ export {
   verifybid,
   placebid,
   updatebid,
-  closeAuction
+  closeAuction,
+  getOwnAuctionfromprofile
 };

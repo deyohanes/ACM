@@ -2,6 +2,7 @@ import React, { useEffect,useState } from "react";
 import { axios } from 'axios';
 import { FaSearch , FaShareAlt } from "react-icons/fa";
 import { LinkContainer  } from 'react-router-bootstrap'
+import { useParams } from "react-router-dom";
 import {   Table,
     Button,
     Row,
@@ -32,10 +33,10 @@ const [modalShow, setModalShow] = React.useState(false)
   const pageNumber = match.params.pageNumber || 1
   const [email, setEmail] = useState('')
   const dispatch = useDispatch()
-
+const [auction ,setAuction] = useState([])
   const productList = useSelector((state) => state.productList)
   const { loading, error, products, page, pages } = productList
-
+  const {id} = useParams();
   const productDelete = useSelector((state) => state.productDelete)
   const {
     loading: loadingDelete,
@@ -79,6 +80,19 @@ const [modalShow, setModalShow] = React.useState(false)
     }
   }
   */
+
+  async function ownproducts() {
+    try {
+     console.log(id)
+     const response = await axios.get(`/api/products/products/own/${id}`);
+     const auction = response.data;
+     console.log(auction);
+     setAuction(auction);
+   } catch (error) {
+     console.log("You dont Have any bids here")
+   }
+ }
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -105,7 +119,7 @@ const [modalShow, setModalShow] = React.useState(false)
 };
  
   useEffect(() => {
-    //getProducts()
+    ownproducts()
     if (!userInfo ) {
       history.push('/login')
       

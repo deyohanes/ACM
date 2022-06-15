@@ -20,6 +20,8 @@ const Warehouse = ({ match, history }) => {
           size: parseInt(size),
         },
       });
+      window.confirm("WareHouse Added Successfully")
+      window.location.replace('/admin/warehousetlist')
     } catch (error) {
       console.error(error);
     }
@@ -37,10 +39,10 @@ const Warehouse = ({ match, history }) => {
   return (
     <>
       <Row>
-        <Col> <Link to="/admin/productlist" className="btn btn-light my-3">
-        Go Back
+        <Col> <Link to="/admin/warehousetlist" className="btn btn-light my-3">
+       Go Back
       </Link></Col>
-        <Col><Link to="/admin/warehouselist" className="btn btn-light my-3">
+        <Col><Link to="/admin/warehousetlist" className="btn btn-light my-3">
         All warehouses
       </Link> </Col>
       </Row>

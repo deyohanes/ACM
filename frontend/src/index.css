@@ -11,6 +11,33 @@ h1 {
   padding: 1rem 0;
 }
 
+.modal-wrapper {
+  position: absolute; 
+  background: rgba(0, 0, 0, 0, .8);
+  display: flex; 
+  justify-content: center; 
+  align-items:center; 
+  width: 100vw; 
+  height: 100vh;
+  z-index: 999;
+}
+
+.modal-content {
+  width: 25%; 
+  height: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.custom-button {
+  padding: 3px 7px;
+  border: 1px solid rgb(89, 82, 82);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 h2 {
   font-size: 1.4rem;
   padding: 0.5rem 0;

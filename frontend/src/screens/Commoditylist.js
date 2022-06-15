@@ -40,8 +40,7 @@ const Commoditylist = ({ history, match }) => {
 
 
 
-
-
+ console.log(commodityName.commoditieName);
  
 
   return (

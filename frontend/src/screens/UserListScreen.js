@@ -39,7 +39,7 @@ const UserListScreen = ({ history }) => {
           <h1>Users</h1>
         </Col>
         <Col className="text-right">
-          <LinkContainer to={'/admin/user/register'}>
+          <LinkContainer to={'/admin/registeradmin'}>
           <Button className='my-3'>
             <i className='fas fa-plus'></i>  Add Admin
           </Button>

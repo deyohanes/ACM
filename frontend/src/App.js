@@ -52,7 +52,9 @@ const App = () => {
 
           <Route path='/producer' component={Producer} />
           <Route path='/register' component={RegisterScreen} />
-          <Route path='/profile' component={ProfileScreen} />
+          <Route path='/admin/registeradmin' component={Registeradmin} />
+
+          <Route path='/profile/:id' component={ProfileScreen} />
           <Route path='/product/:id' component={ProductScreen} />
           <Route path='/cart/:id?' component={CartScreen} />
           <Route path='/admin/userlist' component={UserListScreen} />

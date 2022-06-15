@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -41,7 +41,7 @@ const ProductScreen = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   //const productPostcreate = useSelector((state) => state.productPostcreate);
-
+  const {id} = useParams();
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
   const {
     success: successProductReview,
@@ -51,59 +51,21 @@ const ProductScreen = ({ history, match }) => {
     const Ref = useRef(null);
   
     const addToCartHandler = () => {
-      history.push(`/cart/${match.params.id}?qty=1`)
+      history.push(`/cart/${match.params.id}?qty=${product.currentPrice}`)
     }
 
     async function bidngHandler() {
+         const userId = userInfo._id
+         const price = parseInt(bidprice)
 
-      
-      // console.log(product._id,bidprice)
-         //      const id = product._id
-         // const  userId = userInfo._id
-         //   const price =  bidprice
-         const pid = product._id
-         const uid = userInfo._id
-         const bd = parseInt(bidprice)
-        // const a=  bd.toString()
-        // console.log(typeof(a))
-       const  data = {
-         "id": pid,
-         "userId": uid,
-         "price": bd
+       const  data = { 
+         "userId": userId,
+         "price": price
          }
-       await axios.post("/api/products/auction/placebid",data)
-      
-     //  await axios.post("/api/products/auction/placebid",null)
-     //biding(product._id,userInfo._id,bidprice)
-   
-       
-         //   const id = product._id
-         //const  userId = userInfo._id
-           //const price =  bidprice
-       
-       //await axios.post("/api/products/auction/placebid",id,userId,price)
-      
+       await axios.post(`/api/products/auction/placebid/${id}`,data)  
+       window.location.reload();
        }
        
-       
-          /*
-     try {
-       const price = parseInt(bidprice)
-       const id = product._id;
-       const userId = userInfo._id;
-        console.log(userId)
-       const response = await axios.put("/api/products/auction/placebid",id,userId,price)
-       const bidsuccess = response.data;
-       console.log(bidsuccess);
-     } catch (error) {
-       console.error(error);
-     }
-  
- */
-   
-
-
-
 
 
   const getTimeRemaining = (e) => {
@@ -179,10 +141,7 @@ useEffect(() => {
       })
     );
   };
-  const onClickReset = () => {
-    addToCartHandler()
-    //clearTimer(getDeadTime());
-}
+ 
 
   return (
     <>
@@ -312,7 +271,7 @@ useEffect(() => {
                               >
                                 Bid
                               </Button> </>) : (<>   <Button
-                                onClick={onClickReset}
+                               
                               
                                 className="btn-block"
                                 type="button"

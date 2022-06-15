@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import axios from "axios";
-import { Row, Col,NavLink } from 'react-bootstrap';
+import {Form, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 
 const Registeradmin = ({  history }) => {
@@ -42,10 +42,11 @@ const Registeradmin = ({  history }) => {
         config
       )
        console.log.apply(data)
-      
+     
     } catch (error) {
       
     }
+   
   }
 
 
@@ -56,8 +57,10 @@ const Registeradmin = ({  history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match')
     } else {
-        
-      registeradm(name, email, password,role,region)
+      if (window.confirm("Confirm")) {
+        registeradm(name, email, password,role,region)
+      }
+     
     }
   }
 
@@ -78,9 +81,11 @@ const Registeradmin = ({  history }) => {
       <h1>Register Admin</h1>
       
       </Col>
-        <Col> <NavLink to="/admin/userlist" className="btn btn-light my-3">
+        <Col> 
+        <Link to="/admin/productlist" className="btn btn-light my-3">
         Go Back
-      </NavLink></Col>
+      </Link>
+      </Col>
       </Row>
      
       {message && <Message variant='danger'>{message}</Message>}

@@ -11,10 +11,9 @@ const OrderListScreen = ({ history }) => {
 
   const orderList = useSelector((state) => state.orderList)
   const { loading, error, orders } = orderList
-
+//console.log({orders});
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
-
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listOrders())
@@ -22,6 +21,7 @@ const OrderListScreen = ({ history }) => {
       history.push('/login')
     }
   }, [dispatch, history, userInfo])
+  console.log(orders);
 
   return (
     <>
@@ -47,9 +47,9 @@ const OrderListScreen = ({ history }) => {
             {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
-                <td>{order.user && order.user.name}</td>
+                <td>{  order.id}</td>
                 <td>{order.createdAt.substring(0, 10)}</td>
-                <td>${order.totalPrice}</td>
+                <td>{order.totalPrice}ETB</td>
                 <td>
                   {order.isPaid ? (
                     order.paidAt.substring(0, 10)

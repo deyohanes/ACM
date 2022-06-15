@@ -5,36 +5,38 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Table, Button, Row, Col, InputGroup, FormControl } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
  
 
 const Warehouselist = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1
-  const [warehouse, setWarehouse] = useState();
+  const [warehouse, setWarehouse] = useState([]);
   const [email, setEmail] = useState("");
 
  
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
-
+  async function getWarehouse() {
+    try {
+      const response = await axios.get("/api/warehouse");
+      const warehouseName = response.data;
+      console.log(warehouseName);
+      setWarehouse(warehouseName);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
   useEffect(() => {
-    async function getWarehouse() {
-      try {
-        const response = await axios.get("/api/warehouse");
-        const warehouseName = response.data;
-        console.log(warehouseName);
-        setWarehouse(warehouseName);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
+   
+    getWarehouse()
    
   }, [
    
   ])
+ 
 
   return (
     <>
@@ -67,9 +69,9 @@ const Warehouselist = ({ history, match }) => {
           </Form>
         </Col>
         <Col className='text-right'>
-          <Button className='my-3' >
-            <i className='fas fa-plus'></i> Create Product
-          </Button>
+            <Link to="/admin/warehouse" className="btn btn-light my-3">
+                Create WareHouse
+            </Link> 
         </Col>
       </Row>
     

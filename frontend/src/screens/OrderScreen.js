@@ -50,7 +50,6 @@ const OrderScreen = ({ match, history }) => {
     if (!userInfo) {
       history.push('/login')
     }
-
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal')
       const script = document.createElement('script')
@@ -114,11 +113,11 @@ console.log(JSON.stringify)
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Name: </strong> {order.isPaid }
+                <strong>Name: </strong> {order.user.name }
               </p>
               <p>
                 <strong>Email: </strong>{' '}
-                <a href={`mailto:${order.user }`}>{order.paymentMethod }</a>
+                <a href={`mailto:${order.user }`}>{order.user.email}</a>
               </p>
               <p>
                 <strong>Address:</strong>
@@ -126,7 +125,7 @@ console.log(JSON.stringify)
                 {order.shippingAddress.postalCode},{' '}
                 {order.shippingAddress.country}
               </p>
-              {order.isDelivered ? (
+              {!userInfo.isAdmin && order.isDelivered ? (
                 <Message variant='success'>
                   Delivered on {order.deliveredAt}
                 </Message>

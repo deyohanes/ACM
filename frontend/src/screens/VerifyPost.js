@@ -41,9 +41,9 @@ const VerifyPost = ({ match, history }) => {
 
 
   async function verifypost() {
-  // const {data} ={ timer:timer}
+  const data ={ duration:timer}
     try {
-        await axios.put(`/api/products/auction/verify/${id}`,timer);
+        await axios.put(`/api/products/auction/verify/${id}`,data);
         //console.log(req.params)
         //setwarehouseName(response.data);
 
@@ -74,7 +74,7 @@ const VerifyPost = ({ match, history }) => {
             <Form.Group controlId='name'>
               <Form.Label>End Time</Form.Label>
               <Form.Control
-                type='number'                
+                type='date'                
                 placeholder=""
                 value={timer}
                 onChange={(e) => setTimer(e.target.value)}

@@ -322,12 +322,40 @@ export const filterSearch =
    args  =>
   async (dispatch) => {
     const a = args.key
-    const num = args.number
+    const num = 100
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
 
-      const { data } = await axios.post(
+      const { data } = await axios.get(
         `/api/products/filter?keyword=${a}&pageNumber=${num}`
+      );
+
+      dispatch({
+        type: PRODUCT_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+  
+  export const closeBids =
+   args  =>
+  async (dispatch) => {
+    const a = args
+       
+    try {
+      dispatch({ type: PRODUCT_LIST_REQUEST });
+      //axios.put(`/api/products/auction/close/${id}`);
+      const { data } = await axios.put(
+        `api/products/auction/close/${a}`
       );
 
       dispatch({

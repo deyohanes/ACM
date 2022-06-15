@@ -27,14 +27,14 @@ const PostForm = ({history}) => {
 
   async function postAuction() {
     
-    const {data} = {
+    const data = {
       baseprice : baseprice,
       amount : amount
     }
   try {
     
     console.log(pid);
-    const response = await axios.put(`/api/products/auction/${pid}`, data );
+    const response = await axios.post(`/api/products/auction/${pid}`, data );
     const warehouseName = response.data;
     console.log.apply(warehouseName)
     

@@ -1,23 +1,37 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Table, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listOrderss } from '../actions/orderActions'
-
+import axios from "axios";
+import { useParams } from "react-router-dom";
 const Sold = ({ history }) => {
   const dispatch = useDispatch()
-
+  const {id} = useParams();
   const orderList = useSelector((state) => state.orderList)
   const { loading, error, orders } = orderList
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
-
+  const [auctions,setAuction] = useState([])
+  
+  async function ownauctions() {
+    try {
+     console.log(id)
+     const response = await axios.get(`/api/products/auction/own/${id}`);
+     const auction = response.data;
+     console.log(auction);
+     setAuction(auction);
+   } catch (error) {
+     console.log("You dont Have any bids here")
+   }
+ }
  
 
   useEffect(() => {
+    ownauctions() 
     //dispatch(listOrderss())
   }, [])
 
@@ -42,7 +56,10 @@ const Sold = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {
+              userInfo.Admin ? 
+              (<>
+               {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
@@ -71,6 +88,39 @@ const Sold = ({ history }) => {
                 </td>
               </tr>
             ))}
+              </>): (<>
+                {auctions.map((order) => (
+              <tr key={order._id}>
+                <td>{order._id}</td>
+                <td>{order.user && order.user.name}</td>
+                <td>{order.createdAt.substring(0, 10)}</td>
+                <td>${order.totalPrice}</td>
+                <td>
+                  {order.isPaid ? (
+                    order.paidAt.substring(0, 10)
+                  ) : (
+                    <i className='fas fa-times' style={{ color: 'red' }}></i>
+                  )}
+                </td>
+                <td>
+                  {order.isDelivered ? (
+                    order.deliveredAt.substring(0, 10)
+                  ) : (
+                    <i className='fas fa-times' style={{ color: 'red' }}></i>
+                  )}
+                </td>
+                <td>
+                  <LinkContainer to={`/order/${order._id}`}>
+                    <Button variant='light' className='btn-sm'>
+                      Details
+                    </Button>
+                  </LinkContainer>
+                </td>
+              </tr>
+            ))}
+              </>)
+            }
+           
           </tbody>
         </Table>
       )}

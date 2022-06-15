@@ -49,7 +49,7 @@ const Header = () => {
                       <NavDropdown title={userInfo.name} id="username">
                         {userInfo.role == "producer" ? (
                           <>
-                            <LinkContainer to="/profile">
+                            <LinkContainer to={`/profile/${userInfo._id}`}>
                               <NavDropdown.Item>Profile</NavDropdown.Item>
                             </LinkContainer>
                             <LinkContainer to="/producerproducts">
@@ -66,7 +66,8 @@ const Header = () => {
                             ) : (
                               <>
                                 {" "}
-                                <LinkContainer to="/profile">
+                                <LinkContainer to={`/profile/${userInfo._id}`}>
+                               
                                   <NavDropdown.Item>Profile</NavDropdown.Item>
                                 </LinkContainer>
                               </>
@@ -149,7 +150,7 @@ const Header = () => {
                   <Nav className="ml-auto">
                     <LinkContainer to="/login">
                       <Nav.Link>
-                        <i class="fa-regular fa-message"></i>
+                        <i className="fa-regular fa-message"></i>
                       </Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/login">

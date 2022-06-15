@@ -298,3 +298,38 @@ export const listOrders = () => async (dispatch, getState) => {
     })
   }
 }
+
+export const ownauctions = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ORDER_LIST_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+ 
+    const  { data } = await axios.get(`/products/auction/own/${userInfo._id}`);
+
+    dispatch({
+      type: ORDER_LIST_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout())
+    }
+    dispatch({
+      type: ORDER_LIST_FAIL,
+      payload: message,
+    })
+  }
+  
+    
+ 
+}

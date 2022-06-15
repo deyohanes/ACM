@@ -21,15 +21,16 @@ import { listProducts,filterSearch } from "../actions/productActions";
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword;
    const pageNumber = match.params.pageNumber || 1;
-  const [level, setLevel] = useState("");
+
+   const [level, setLevel] = useState("");
   
   const dispatch = useDispatch();
   const [name, setName] = useState([]);
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
 
- function filterSearch() {
-      dispatch(filterSearch({key:`opend`,pageNumber}))
+ function filterSearchProds(key) {
+      dispatch(filterSearch({key,pageNumber}))
  }
 
   useEffect(() => {
@@ -52,10 +53,9 @@ const HomeScreen = ({ match }) => {
   <Row>
     <Col>
     
-    <Button  onClick={filterSearch} variant="Secondary" >All</Button>
-    <Button onClick={filterSearch}  variant="Secondary">Opened</Button>
-     <Button onClick={filterSearch}  variant="Secondary">Closed</Button>
-     </Col>
+    <Button  onClick={() => filterSearchProds('all')} variant="Secondary" >All</Button>
+    <Button onClick={() => filterSearchProds('opened')}  variant="Secondary">Opened</Button>
+      </Col>
     <Col> </Col>
     <Col> </Col>
   </Row>
