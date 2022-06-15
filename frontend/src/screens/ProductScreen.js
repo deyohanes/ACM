@@ -187,7 +187,7 @@ useEffect(() => {
                     )}
                     {
                       product.isEnd ? (<> <ListGroup.Item>
-                        Winner: {product.bids.user}
+                        Winner: {product.purchasedBy}
                       </ListGroup.Item></>):(<></>)
                     }
                     <ListGroup.Item>

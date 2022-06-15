@@ -19,10 +19,9 @@ router.route('/').post(registerUser).get(protect, admin, getUsers)
 router.post('/login', authUser)
 //router.route('/:id/reviews').post(createUserReview)
 router.post('/ider', getId)
+router.post('/adminregister', registerAdmin)
 router.post('/review', createUserReview)
-
-router.route('/admin').post(registerAdmin)
-router
+ router
   .route('/profile')
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile)

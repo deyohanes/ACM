@@ -16,9 +16,12 @@ const warehouseSchema = new mongoose.Schema({
   isFull: {
     type: Boolean,
     required: true,
-    default : false,
-    
+    default : false, 
   },
+  remaing : {
+    type : Number,
+   
+  }
 });
 const warehouse = new mongoose.model("warehouses", warehouseSchema);
 export default warehouse;

@@ -17,8 +17,8 @@ import {
   getAuctionById,
   closeAuction,
   getfilter,
-   
-  ownproducts
+  ownproducts,
+  reqpro
 
 } from '../controllers/productController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
@@ -29,6 +29,7 @@ router.get('/top', getTopProducts)
 router.get('/own', getOwnProducts)
 router.get('/auction/all', getAuction)
 router.get('/products/own', ownproducts)
+router.post('/request', reqpro)
 
 
 router.get('/filter', getfilter)

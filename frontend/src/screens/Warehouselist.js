@@ -6,23 +6,43 @@ import { Table, Button, Row, Col, InputGroup, FormControl } from 'react-bootstra
 import { useDispatch, useSelector } from 'react-redux'
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
- 
+import { useParams } from "react-router-dom";
+
 
 const Warehouselist = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1
   const [warehouse, setWarehouse] = useState([]);
   const [email, setEmail] = useState("");
-
- 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
+  const {id} = useParams();
 
   async function getWarehouse() {
     try {
       const response = await axios.get("/api/warehouse");
       const warehouseName = response.data;
-      console.log(warehouseName);
-      setWarehouse(warehouseName);
+       setWarehouse(warehouseName);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function updatewarehouse() {
+    try {
+      const response = await axios.put("/api/warehouse/update/:id");
+      const warehouseName = response.data;
+       setWarehouse(warehouseName);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function deletewarehouse(id) {
+    try {
+      const response = await axios.delete(`/api/warehouse/${id}`);
+      const warehouseName = response.data;
+       setWarehouse(warehouseName);
+       window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -91,11 +111,11 @@ const Warehouselist = ({ history, match }) => {
             <tbody>
               {warehouse.map((data) => (
                 <tr key={data._id}>
-                  <td>{warehouse._id}</td>
-                  <td>{warehouse.warehouseSymbol}</td>
-                  <td>{warehouse.region}</td>
-                  <td>{warehouse.size}</td>
-                  <td>{warehouse.isFull}</td>
+                  <td>{data._id}</td>
+                  <td>{data.warehouseSymbol}</td>
+                  <td>{data.region}</td>
+                  <td>{data.size}</td>
+                  <td>{data.isFull ? ("Its Full"):("Not Full")}</td>
                   <td>
                     <LinkContainer to={`/admin/warehouse/${data._id}/edit`}>
                       <Button variant='light' className='btn-sm'>
@@ -106,7 +126,7 @@ const Warehouselist = ({ history, match }) => {
                     <Button
                       variant='danger'
                       className='btn-sm'
-                           //onClick={() => deleteHandler(product._id)}
+                           onClick={() => deletewarehouse(data._id)}
                     >
                       <i className='fas fa-trash'></i>
                     </Button>

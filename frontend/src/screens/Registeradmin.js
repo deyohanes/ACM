@@ -14,8 +14,10 @@ const Registeradmin = ({  history }) => {
   const [password, setPassword] = useState('')
   const [region, setRegion] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [message, setMessage] = useState(null)
+  const [role, setRole] = useState('radmin')
 
+  const [message, setMessage] = useState(null)
+  const [warehouse , setWarehouse] =useState([])
   const dispatch = useDispatch();
 
   const userList = useSelector((state) => state.userList);
@@ -27,28 +29,34 @@ const Registeradmin = ({  history }) => {
   const { success: successDelete } = userDelete;
 
 
- const registeradm = (name, email, password,role,region) => async (dispatch) => {
-    try {
-     
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-  
-      const { data } = await axios.post(
-        '/api/users/admin',
-        { name, email, password,role,region },
-        config
-      )
-       console.log.apply(data)
-     
-    } catch (error) {
-      
-    }
-   
-  }
 
+  async function registerAdmin() {
+    try {
+      let data ={
+        name : name ,   email : email , password : password ,  region  :region 
+      }
+    let response =  await axios({
+        method: "post",
+        url: "/api/users/adminregister" , data
+        
+      });
+      setWarehouse(response.data)
+        } catch (error) {
+       console.error(error);
+    }
+  } 
+
+  async function warehouselist() {
+    try {
+    let response =  await axios({
+        method: "get",
+        url: "/api/warehouse" 
+      });
+      setWarehouse(response.data)
+        } catch (error) {
+       console.error(error);
+    }
+  }
 
  
   const submitHandler = (e) => {
@@ -57,17 +65,19 @@ const Registeradmin = ({  history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match')
     } else {
-      if (window.confirm("Confirm")) {
-        registeradm(name, email, password,role,region)
-      }
      
+      if (window.confirm("Confirm")) {
+        registerAdmin(e)
+      }
     }
+ 
   }
 
 
   useEffect(() => {
+
     if (userInfo && userInfo.isAdmin) {
-     
+    warehouselist()
     } else {
       history.push("/login");
     }
@@ -132,15 +142,20 @@ const Registeradmin = ({  history }) => {
           ></Form.Control>
         </Form.Group>
 
-        <Form.Group controlId='email'>
-          <Form.Label>Region</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Region'
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Form.Group as={Col} controlId="formGridCity">
+              <Form.Label>Commudity Name</Form.Label>
+              <Form.Control
+                as="select"
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+              >
+                {warehouse.map((data) => (
+                  <option key={data._id} value={warehouse.value}>
+                    {data.warehouseSymbol}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
         <Button type='submit' variant='primary'>
           Register

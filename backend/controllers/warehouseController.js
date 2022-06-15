@@ -2,17 +2,17 @@ import asyncHAndler from "express-async-handler";
 import Warehouse from "../models/warehouseModel.js";
 
 //--------------------------------------------------------------------------------------------------------------------------------------//
-//@desc get commodities
-//@route get/api/commodity
-//@access private
+// get all warehouses 
+// route get/api/warehouse
+// access private
 const getWarehouse = asyncHAndler(async (req, res) => {
     const warehouse = await Warehouse.find();
     res.status(200).json(warehouse);
   });
 //--------------------------------------------------------------------------------------------------------------------------------------//
-//@desc get commodities by id
-//@route get/api/commodity
-//@access private
+// get warehouse by id
+// route get/api/warehouse
+// ccess private
 const getWarehouseById = asyncHAndler(async (req, res) => {
   try {
     const warehouse = await Warehouse.findById(req.params.id);
@@ -23,9 +23,9 @@ const getWarehouseById = asyncHAndler(async (req, res) => {
 });
 //--------------------------------------------------------------------------------------------------------------------------------------//
 
-//@desc setCommodities
-//@route POST/api/commodity
-//@access private
+//add warehouse
+//route POST/api/commodity
+//access private
 const setWarehouse = asyncHAndler(async (req, res) => {
   const warehouse = new Warehouse({
     warehouseSymbol: req.body.warehouseSymbol,
@@ -56,6 +56,7 @@ const setWarehouse = asyncHAndler(async (req, res) => {
 //@route PUT/api/commodity
 //@access private
 const updateWarehouse = asyncHAndler(async (req, res) => {
+
   const warehouse = await Warehouse.findById(req.params.id);
   if (!warehouse) {
     res.status(400);
@@ -72,13 +73,14 @@ const updateWarehouse = asyncHAndler(async (req, res) => {
 });
 //--------------------------------------------------------------------------------------------------------------------------------------//
 //@desc delete commodities
-//@route delete/api/commodity
+//@route delete /api/commodity/delete/:id
 //@access private
 const deleteWarehouse = asyncHAndler(async (req, res) => {
   const warehouse = await Warehouse.findById(req.params.id);
   if (!warehouse) {
-    res.status(400);
-    throw new Error("Product Not Found");
+    res.status(404);
+    console.log(res.status(404));
+    throw new Error("Product Not Found"); 
   }
   await Warehouse.deleteOne();
   res.status(200).json({ id: req.params.id });

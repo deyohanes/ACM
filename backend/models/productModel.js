@@ -115,8 +115,8 @@ const productSchema = mongoose.Schema(
      
    },
    purchasedBy: {
-     type: mongoose.Schema.Types.ObjectId,
-     ref: 'user',
+     type:String
+    
    },
     currentBidder: {
      type: String,

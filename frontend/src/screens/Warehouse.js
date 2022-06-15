@@ -1,29 +1,27 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Form, Button,Row,Col } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
-
+ 
 const Warehouse = ({ match, history }) => {
   const [region, setRegion] = useState("");
   const [name, setName] = useState([]);
   const [size, setSize] = useState("");
-
+  
   async function setCommodity() {
     try {
-      await axios({
+    let response =  await axios({
         method: "post",
         url: "/api/warehouse",
         data: {
           warehouseSymbol: name,
           region: region,
           size: parseInt(size),
-        },
+        }, 
       });
-      window.confirm("WareHouse Added Successfully")
-      window.location.replace('/admin/warehousetlist')
-    } catch (error) {
-      console.error(error);
+        } catch (error) {
+       console.error(error);
     }
   }
 
@@ -33,20 +31,24 @@ const Warehouse = ({ match, history }) => {
     e.preventDefault();
     //const id = getid(email)
     setCommodity();
-  
   };
 
   return (
     <>
       <Row>
-        <Col> <Link to="/admin/warehousetlist" className="btn btn-light my-3">
-       Go Back
-      </Link></Col>
-        <Col><Link to="/admin/warehousetlist" className="btn btn-light my-3">
-        All warehouses
-      </Link> </Col>
+        <Col>
+          {" "}
+          <Link to="/admin/warehousetlist" className="btn btn-light my-3">
+            Go Back
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/admin/warehousetlist" className="btn btn-light my-3">
+            All warehouses
+          </Link>{" "}
+        </Col>
       </Row>
-      
+
       <FormContainer>
         <h1>Add Warehouse</h1>
 
@@ -75,12 +77,13 @@ const Warehouse = ({ match, history }) => {
             <Form.Label>Size</Form.Label>
             <Form.Control
               type="number"
-              placeholder="Enter Orgin"
+              placeholder="Enter Warehouse Size"
               value={size}
               onChange={(e) => setSize(e.target.value)}
             ></Form.Control>
           </Form.Group>
-
+          <Form.Group controlId="brand">
+           </Form.Group>
           <Button type="submit" variant="primary">
             ADD
           </Button>

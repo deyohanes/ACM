@@ -433,21 +433,26 @@ const getfilter = asyncHandler(async (req, res) => {
   let products;
   switch (keyword) {
     case "all":
-         products = await Product.find({}).sort({ rating: -1 });
+         products = await Product.find({}).sort({ rating: -1 }); 
+         res.send(products)
+         //console.log("sort products by keyword");
       break;
     case "opened":
-          products = await Product.find({isLive : true}).sort({ rating: -1 });
+          products = await Product.find({isLive : true}) 
+         // console.log("sort products by keyword");
+
       break;
     case "closed":
-           products = await Product.find({isClosed : true}).sort({ rating: -1 });
+           products = await Product.find({isClosed : true}) 
+         //  console.log("sort products by keyword");
+
      break;
      
-  }
-  if(!products.length > 0 ){
-    products = await Product.find({}).sort({ rating: -1 }).limit(3);
-  }
-res.json({products})
-  res.json(products);
+   }
+         if(!products.length > 0 ){
+                products = await Product.find({}).sort({ rating: -1 }).limit(3);
+                              }
+            
 });
 
 const closeAuction = asyncHandler(async (req, res) => {
@@ -482,6 +487,15 @@ const {id} = req.params.id
   const auction = await Product.findById(id)
  res.json(auction);
 });
+
+
+const reqpro = asyncHandler(async (req, res) => {
+const data  =   req.body
+  return res.json(data)
+  // const request = await
+});
+
+
 export {
   getProducts,
   getOwnProducts,
@@ -502,5 +516,6 @@ export {
   placebid,
   updatebid,
   closeAuction,
-  getOwnAuctionfromprofile
+  getOwnAuctionfromprofile,
+  reqpro
 };
